@@ -2,7 +2,7 @@
 
 ## Mục tiêu
 
-Đưa một mô hình xác thực người nói xuống chạy được trên vi điều khiển, rồi đo cái giá phải trả. Không phải làm ra một cánh cửa biết mở, mà làm ra một bảng số liệu trả lời được ba câu:
+Nén một mô hình xác thực người nói xuống cỡ chạy được trên vi điều khiển, rồi đo mức suy giảm mà mỗi phương pháp nén gây ra. Sản phẩm của đồ án là bảng số liệu trả lời ba câu hỏi sau, không phải một hệ thống kiểm soát ra vào hoàn chỉnh:
 
 - Với cùng ngân sách khoảng 300KB, ba đường nén (chưng cất, tỉa kênh, train thẳng mô hình nhỏ) cho EER khác nhau thế nào, và cách nào đáng công nhất.
 - Lượng tử hoá INT8 làm **dịch điểm vận hành** của bài toán open-set bao nhiêu, tức ngưỡng đã hiệu chuẩn trước khi lượng tử hoá còn dùng được không, và hiệu chuẩn lại trên tập val có lấy lại được phần đã mất không.

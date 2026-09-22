@@ -34,7 +34,7 @@ Tách một tập val riêng để hiệu chuẩn ngưỡng, người nói trong
 
 ## 4. Teacher
 
-Nạp ECAPA-TDNN pretrained từ SpeechBrain, chạy trên bộ thử, tính EER. Số này phải khớp hợp lý với số đã công bố. Lệch nhiều nghĩa là bước 2 hoặc 3 có vấn đề, dừng lại sửa trước khi đi tiếp. Đây là bài kiểm tra sức khoẻ của cả pipeline.
+Nạp ECAPA-TDNN pretrained từ SpeechBrain, chạy trên bộ thử, tính EER. Số này phải khớp hợp lý với số đã công bố. Lệch nhiều nghĩa là bước 2 hoặc 3 có vấn đề, dừng lại sửa trước khi đi tiếp. Đây là phép kiểm tra tính đúng đắn của toàn bộ pipeline trước khi đi tiếp.
 
 ## 5. Ba đường nén (`src/compress/`)
 
@@ -60,7 +60,7 @@ Xuất TFLite, nhúng vào firmware để trọng số nằm trong flash chứ k
 
 Đường tín hiệu trên thiết bị: I2S đọc từ INMP441, gom theo khung, tính log-mel dạng streaming bằng FFT của ESP-DSP, đẩy qua TFLite Micro, ra embedding, so cosine với mẫu đã đăng ký.
 
-Bắt buộc streaming. Ba giây audio 16kHz dạng float là 192KB, không có cửa nào buffer cả câu rồi mới xử lý.
+Bắt buộc làm dạng streaming. Ba giây audio 16kHz dạng float chiếm 192KB, vượt ngân sách SRAM, nên không thể đệm cả câu rồi mới xử lý.
 
 ## 8. Đo trên thiết bị
 
