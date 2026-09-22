@@ -1,0 +1,13 @@
+data/*
+!data/README.md
+.venv/
+__pycache__/
+*.pyc
+firmware/build/
+firmware/sdkconfig
+*.wav
+*.ckpt
+*.pth
+.DS_Store
+
+/local
