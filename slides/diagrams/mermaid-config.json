@@ -1,0 +1,17 @@
+{
+ "theme": "base",
+ "flowchart": {
+  "htmlLabels": false,
+  "useMaxWidth": true,
+  "padding": 8
+ },
+ "themeVariables": {
+  "primaryColor": "#e7edf6",
+  "primaryBorderColor": "#1F3A68",
+  "primaryTextColor": "#1d2b36",
+  "lineColor": "#1F3A68",
+  "fontFamily": "Segoe UI, sans-serif",
+  "fontSize": "16px"
+ },
+ "htmlLabels": false
+}

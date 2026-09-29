@@ -1,0 +1,9 @@
+flowchart LR
+  A["INMP441<br/>I2S 16kHz"] --> B["Khung 25ms<br/>bước 10ms"]
+  B --> C["log-mel streaming<br/>FFT ESP-DSP"]
+  C --> D["Student INT8<br/>TFLite Micro + ESP-NN"]
+  D --> F["Embedding"]
+  F --> G["Cosine với mẫu<br/>đã đăng ký"]
+  G --> H{"≥ ngưỡng?"}
+  classDef hot fill:#1F3A68,color:#ffffff,stroke:#1F3A68;
+  class D hot;
