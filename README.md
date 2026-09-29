@@ -1,4 +1,4 @@
-# IT2058 - Đồ án: So sánh ba phương pháp nén mô hình xác thực người nói trên vi điều khiển ESP32-S3
+# IT2058 - Đồ án: Triển khai xác thực người nói trên vi điều khiển ESP32-S3 bằng nén mô hình
 
 Đồ án môn IT2058. Nhóm lấy một mô hình xác thực người nói cỡ lớn đã được huấn luyện sẵn, nén xuống cỡ chạy được trên vi điều khiển ESP32-S3, rồi đo xem mỗi cách nén làm mất bao nhiêu độ chính xác và đổi lại được bao nhiêu về kích thước, độ trễ và điện năng.
 

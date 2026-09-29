@@ -4,15 +4,16 @@
 
 | Linh kiện | Vai trò | Số lượng | Giá ước lượng |
 |-----------|---------|----------|---------------|
-| ESP32-S3-DevKitC-1 N16R8 | Thiết bị chính, 16MB flash 8MB PSRAM | 1-2 | ~250k/cái |
-| INMP441 | Micro I2S | 2 | ~50k/cái |
+| ESP32-S3 N16R8 (DevKitC-1 hoặc bản clone YD-ESP32-S3) | Thiết bị chính, 16MB flash 8MB PSRAM | 1 | ~250k |
+| INMP441 | Micro I2S, mua dư một cái phòng hỏng khi hàn | 2 | ~50k/cái |
 | INA219 | Đo dòng và điện áp để tính năng lượng | 1 | ~50k |
-| Dây nối, breadboard | | | ~50k |
-| **Tổng** | | | **~450k (một bộ), ~750k (hai bộ)** |
+| Dây cắm, breadboard | | | ~50k |
+| Cáp USB-C có truyền dữ liệu | Dùng cáp sẵn có nếu đúng loại | 0-1 | ~40k |
+| **Tổng** | | | **~450k** |
 
 Giá là ước lượng thị trường, cần kiểm tra lại khi mua.
 
-Nên mua **hai bộ**. Từ tuần 4 cả ba người cùng cần đo trên thiết bị, một bộ sẽ thành nút cổ chai. Chênh lệch 300k nhỏ hơn nhiều so với rủi ro trễ tiến độ.
+Chỉ mua **một bộ**. Phần lớn công việc (huấn luyện, lượng tử hoá, tính EER bản FP32 và INT8) chạy trên PC. Việc đo trên thiết bị do TV2 làm tập trung cho cả ba model, nên một board là đủ. Chỉ mua thêm nếu board hỏng.
 
 **Phải lấy đúng ESP32-S3, không phải ESP32 thường.** S3 có tập lệnh vector và thư viện ESP-NN tối ưu cho suy luận lượng tử hoá, nhanh hơn ESP32 đời cũ nhiều lần. ESP32 thường không có tăng tốc AI nào và sẽ không chạy nổi đồ án này.
 

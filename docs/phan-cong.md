@@ -48,4 +48,4 @@ Cả nhóm dùng chung một teacher, một kiến trúc student, một trial li
 
 Mỗi con số đưa vào báo cáo phải kèm được lệnh và cấu hình đã tạo ra nó. Chạy xong tới đâu ghi số liệu tới đó, đừng để dồn tới cuối.
 
-Chỉ có một cái ESP32-S3 dùng chung nên đặt lịch dùng thiết bị: TV2 giữ máy tuần 1-2 để thông đường, từ tuần 4 thì chia ca đo. Nếu ngân sách cho phép thì mua hai bộ để tuần 4 không tắc.
+Nhóm chỉ có một ESP32-S3 và TV2 giữ máy. TV1 và TV3 không cần cầm thiết bị: nộp file TFLite INT8 theo đúng quy ước của TV2, TV2 nạp và đo cả ba model trên cùng một board. Cách này còn giúp số đo công bằng hơn, vì cả ba model đều đo trên cùng một board, cùng firmware và cùng người đo. Muốn kiểm tra EER bản INT8 trước khi gửi thì mỗi người tự chạy trên PC bằng TFLite interpreter.
