@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1210 440" width="1210" height="440" font-family="Be Vietnam Pro, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#1F3A68"/>
+    </marker>
+    <g id="tick">
+      <circle r="11" fill="#15803d"/>
+      <path d="M-5,0 L-1.5,4 L5.5,-4.5" fill="none" stroke="#ffffff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </defs>
+
+  <!-- ===== Sinh viên ===== -->
+  <rect x="22" y="34" width="296" height="58" rx="14" fill="#eef3fb" stroke="#cdd9ec" stroke-width="1.5"/>
+  <path d="M140,91 L162,91 L150,110 Z" fill="#eef3fb" stroke="#cdd9ec" stroke-width="1.5"/>
+  <rect x="141" y="88" width="20" height="5" fill="#eef3fb"/>
+  <text x="170" y="69" text-anchor="middle" font-size="17" fill="#1d2b36" font-style="italic">"Em là Trần Tú Quang, có mặt."</text>
+
+  <circle cx="150" cy="152" r="34" fill="#1F3A68"/>
+  <path d="M90,292 L90,252 Q90,200 150,200 Q210,200 210,252 L210,292 Z" fill="#1F3A68"/>
+
+  <path d="M232,140 Q250,165 232,190" fill="none" stroke="#2a6df4" stroke-width="3.5" stroke-linecap="round"/>
+  <path d="M252,126 Q280,165 252,204" fill="none" stroke="#2a6df4" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+  <path d="M272,112 Q310,165 272,218" fill="none" stroke="#2a6df4" stroke-width="3.5" stroke-linecap="round" opacity=".45"/>
+
+  <text x="150" y="324" text-anchor="middle" font-size="19" font-weight="700" fill="#1F3A68">Sinh viên</text>
+  <text x="150" y="348" text-anchor="middle" font-size="15" fill="#6b7a90">nói 2–3 giây trước thiết bị</text>
+
+  <!-- ===== Thiết bị ===== -->
+  <rect x="368" y="78" width="334" height="214" rx="18" fill="#ffffff" stroke="#1F3A68" stroke-width="2.5"/>
+
+  <!-- OLED -->
+  <rect x="392" y="102" width="178" height="96" rx="8" fill="#0f1f3d"/>
+  <text x="406" y="135" font-size="17" font-weight="700" fill="#ffffff">Trần Tú Quang</text>
+  <text x="406" y="162" font-size="15" font-weight="600" fill="#6ee7a0">Có mặt · 08:02</text>
+  <text x="406" y="185" font-size="13" fill="#9db4d8">điểm tương đồng 0,81</text>
+
+  <!-- micro INMP441 -->
+  <rect x="600" y="104" width="68" height="68" rx="8" fill="#2a4d86"/>
+  <circle cx="634" cy="138" r="20" fill="#e7edf6" stroke="#cdd9ec" stroke-width="1.5"/>
+  <circle cx="634" cy="138" r="6" fill="#1F3A68"/>
+  <text x="634" y="192" text-anchor="middle" font-size="13" fill="#6b7a90">micro INMP441</text>
+
+  <!-- board ESP32-S3 -->
+  <rect x="392" y="212" width="286" height="60" rx="6" fill="#1d2b36"/>
+  <g fill="#d9b44a">
+    <circle cx="402" cy="219" r="2"/><circle cx="414" cy="219" r="2"/><circle cx="426" cy="219" r="2"/><circle cx="438" cy="219" r="2"/>
+    <circle cx="450" cy="219" r="2"/><circle cx="462" cy="219" r="2"/><circle cx="474" cy="219" r="2"/><circle cx="486" cy="219" r="2"/>
+    <circle cx="498" cy="219" r="2"/><circle cx="510" cy="219" r="2"/><circle cx="522" cy="219" r="2"/><circle cx="534" cy="219" r="2"/>
+    <circle cx="546" cy="219" r="2"/><circle cx="558" cy="219" r="2"/><circle cx="570" cy="219" r="2"/><circle cx="582" cy="219" r="2"/>
+    <circle cx="402" cy="265" r="2"/><circle cx="414" cy="265" r="2"/><circle cx="426" cy="265" r="2"/><circle cx="438" cy="265" r="2"/>
+    <circle cx="450" cy="265" r="2"/><circle cx="462" cy="265" r="2"/><circle cx="474" cy="265" r="2"/><circle cx="486" cy="265" r="2"/>
+    <circle cx="498" cy="265" r="2"/><circle cx="510" cy="265" r="2"/><circle cx="522" cy="265" r="2"/><circle cx="534" cy="265" r="2"/>
+    <circle cx="546" cy="265" r="2"/><circle cx="558" cy="265" r="2"/><circle cx="570" cy="265" r="2"/><circle cx="582" cy="265" r="2"/>
+  </g>
+  <rect x="598" y="219" width="70" height="46" rx="3" fill="#c9d1db" stroke="#9aa7b8" stroke-width="1"/>
+  <text x="633" y="246" text-anchor="middle" font-size="12" font-weight="700" fill="#1d2b36">ESP32-S3</text>
+  <text x="490" y="248" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">ESP32-S3 N16R8</text>
+
+  <text x="535" y="324" text-anchor="middle" font-size="19" font-weight="700" fill="#1F3A68">Thiết bị điểm danh</text>
+  <text x="535" y="348" text-anchor="middle" font-size="15" fill="#6b7a90">xử lý tại chỗ trên vi điều khiển, không cần Internet</text>
+
+  <!-- ===== Kết nối ===== -->
+  <line x1="712" y1="170" x2="828" y2="170" stroke="#1F3A68" stroke-width="2.5" marker-end="url(#arrow)"/>
+  <text x="770" y="156" text-anchor="middle" font-size="14" font-weight="600" fill="#1F3A68">USB hoặc WiFi</text>
+  <text x="770" y="192" text-anchor="middle" font-size="13" fill="#6b7a90">chỉ gửi kết quả</text>
+
+  <!-- ===== Laptop: app sổ điểm danh ===== -->
+  <rect x="846" y="48" width="330" height="232" rx="10" fill="#ffffff" stroke="#1F3A68" stroke-width="2.5"/>
+  <path d="M846,58 Q846,48 856,48 L1166,48 Q1176,48 1176,58 L1176,82 L846,82 Z" fill="#1F3A68"/>
+  <text x="864" y="70" font-size="14" font-weight="600" fill="#ffffff">Sổ điểm danh · IT2058 · 12/10</text>
+
+  <text x="864" y="116" font-size="15" fill="#1d2b36">Trần Tú Quang</text>
+  <text x="1086" y="116" text-anchor="end" font-size="14" fill="#6b7a90">08:02</text>
+  <use href="#tick" x="1138" y="111"/>
+  <line x1="858" y1="134" x2="1164" y2="134" stroke="#e3e9f3" stroke-width="1.5"/>
+
+  <text x="864" y="160" font-size="15" fill="#1d2b36">Tô Huỳnh Minh Tiến</text>
+  <text x="1086" y="160" text-anchor="end" font-size="14" fill="#6b7a90">08:03</text>
+  <use href="#tick" x="1138" y="155"/>
+  <line x1="858" y1="178" x2="1164" y2="178" stroke="#e3e9f3" stroke-width="1.5"/>
+
+  <text x="864" y="204" font-size="15" fill="#1d2b36">Nguyễn Ấn</text>
+  <text x="1086" y="204" text-anchor="end" font-size="14" fill="#9aa7b8">chưa</text>
+  <circle cx="1138" cy="199" r="10" fill="none" stroke="#c3cddb" stroke-width="2"/>
+  <line x1="858" y1="222" x2="1164" y2="222" stroke="#e3e9f3" stroke-width="1.5"/>
+
+  <rect x="864" y="234" width="104" height="32" rx="8" fill="#eef3fb" stroke="#cdd9ec" stroke-width="1.5"/>
+  <text x="916" y="255" text-anchor="middle" font-size="14" font-weight="600" fill="#1F3A68">Xuất CSV</text>
+  <text x="1158" y="255" text-anchor="end" font-size="14" fill="#6b7a90">2/3 có mặt</text>
+
+  <path d="M826,282 L1196,282 L1182,300 L840,300 Z" fill="#d4deee" stroke="#1F3A68" stroke-width="2"/>
+  <rect x="980" y="282" width="62" height="6" rx="3" fill="#9aa7b8"/>
+
+  <text x="1011" y="324" text-anchor="middle" font-size="19" font-weight="700" fill="#1F3A68">Giảng viên</text>
+  <text x="1011" y="348" text-anchor="middle" font-size="15" fill="#6b7a90">app sổ điểm danh trên laptop, xuất CSV</text>
+
+  <!-- ===== Ghi chú quyền riêng tư ===== -->
+  <rect x="40" y="378" width="1130" height="44" rx="10" fill="#f7faff" stroke="#d4deee" stroke-width="1.5"/>
+  <text x="605" y="406" text-anchor="middle" font-size="15.5" fill="#20324f">Âm thanh xử lý ngay trên thiết bị và không được lưu lại · mỗi người chỉ lưu một mẫu giọng gồm 192 số trong flash</text>
+</svg>

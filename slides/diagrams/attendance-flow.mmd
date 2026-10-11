@@ -1,0 +1,14 @@
+%%{init: {"themeVariables": {"clusterBkg": "#f7faff", "clusterBorder": "#d4deee"}}}%%
+flowchart LR
+  subgraph ATT["Điểm danh · mỗi lượt"]
+    direction LR
+    A1["Sinh viên nói<br/>2–3 giây"] --> A2["Bỏ khoảng lặng<br/>tính phổ âm thanh"] --> A3["Model nhỏ<br/>ra dấu vân giọng"] --> A4["So với mẫu giọng<br/>của cả lớp"] --> A5{{"Người giống nhất<br/>đủ giống và<br/>bỏ xa người thứ hai?"}}
+    A5 -- "có" --> A6["Hiện tên trên màn hình<br/>gửi kết quả về laptop"]
+    A5 -- "không" --> A7["Mời nói lại<br/>sau 2 lần: nhập MSSV"]
+  end
+  subgraph ENR["Đăng ký · một lần đầu khoá"]
+    direction LR
+    E1["Nói 3–5 câu<br/>mỗi câu ~3 giây"] --> E2["Bỏ khoảng lặng<br/>tính phổ âm thanh"] --> E3["Model nhỏ<br/>ra dấu vân giọng"] --> E4["Lấy trung bình<br/>các câu"] --> E5[("Mẫu giọng<br/>lưu trong chip")]
+  end
+  classDef hot fill:#1F3A68,color:#ffffff,stroke:#1F3A68;
+  class E3,A3 hot;
