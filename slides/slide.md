@@ -1,6 +1,6 @@
 ---
 marp: true
-title: "Triển khai xác thực người nói trên vi điều khiển ESP32-S3 bằng nén mô hình"
+title: "Hệ thống điểm danh bằng giọng nói trên vi điều khiển ESP32-S3 dùng mô hình nén"
 author: "Trần Tú Quang · Tô Huỳnh Minh Tiến · Nguyễn Ấn"
 paginate: true
 html: true
@@ -176,7 +176,28 @@ style: |
   .mono { margin:8px 0; }
   /* tiện ích thu nhỏ bảng/list khi slide dày */
   .tight table { font-size:18.5px; } .tight li { font-size:22px; }
-footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Xác thực người nói trên ESP32-S3</span><span>29/09/2026</span><span></span>'
+  /* luồng ngang vẽ bằng div (thay cho Mermaid) */
+  .lane { background:#f7faff; border:1px solid var(--line); border-radius:12px; padding:10px 14px 12px; margin:10px 0; }
+  .lane .lt { font-size:15px; font-weight:700; color:var(--navy); margin:0 0 8px 2px; }
+  .hflow { display:flex; align-items:center; gap:8px; }
+  .hflow .node { flex:1; background:#fff; border:1.5px solid #cdd9ec; border-radius:10px; padding:8px 10px;
+    font-size:16px; line-height:1.3; text-align:center; color:var(--ink); }
+  .hflow .node.fill { background:var(--navy); color:#fff; border-color:var(--navy); }
+  .hflow .node.ask { border:2px dashed var(--accent); color:var(--navy); font-weight:600; }
+  .hflow .ar { flex:0 0 auto; color:var(--accent); font-size:20px; font-weight:700; }
+  .hflow .branch { flex:1.25; display:flex; flex-direction:column; gap:6px; }
+  .hflow .branch .node { font-size:15px; text-align:left; }
+  .hflow .tag { display:inline-block; font-size:12px; font-weight:700; color:#fff; background:var(--accent);
+    border-radius:6px; padding:1px 6px; margin-right:6px; }
+  .hflow .tag.no { background:#9aa7b8; }
+  .vg { flex:1; text-align:center; }
+  .vg .cells { display:flex; gap:3px; justify-content:center; }
+  .vg .cells i { display:block; width:13px; height:30px; border-radius:2px; }
+  .vg .cap { font-size:14px; color:var(--muted); margin-top:4px; }
+  .pair { flex:1; text-align:center; }
+  .pair span { display:inline-block; border:2px dashed var(--accent); border-radius:999px; padding:2px 14px;
+    font-size:14px; font-weight:700; color:var(--navy); background:#fff; }
+footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>29/09/2026</span><span></span>'
 header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 ---
 
@@ -185,8 +206,8 @@ header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 
 <div class="titlebox">
 
-# Triển khai xác thực người nói trên vi điều khiển ESP32-S3 bằng nén mô hình
-### Speaker Verification on the ESP32-S3 Microcontroller via Model Compression
+# Hệ thống điểm danh bằng giọng nói trên vi điều khiển ESP32-S3 dùng mô hình nén
+### Voice-Based Attendance on the ESP32-S3 Microcontroller with Compressed Speaker Verification Models
 
 </div>
 
@@ -200,117 +221,390 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-## Giới thiệu đề tài
+## Nội dung
 
-- **Bối cảnh:** các ứng dụng Edge AI hiện thường chạy trên máy tính nhúng như Jetson Nano, ví dụ điểm danh bằng khuôn mặt [8] và Lite-XNet [9]. Nhóm chọn làm ở lớp thấp hơn là **vi điều khiển ESP32-S3**, giá khoảng 250k, chỉ có **512KB SRAM** và CPU **240MHz**.
-- **Bài toán:** xác thực người nói, tức xác định *ai đang nói* và từ chối người lạ. Bài toán này hợp để làm trên thiết bị biên vì dữ liệu giọng nói là dữ liệu sinh trắc không nên gửi lên server, kết quả cần có dưới 1 giây, và hệ thống phải chạy được cả khi mất mạng.
-- **Thách thức:** mô hình tốt hiện nay là ECAPA-TDNN [1], khoảng **20 triệu tham số**, không thể nạp vào vi điều khiển. Nhóm phải nén mô hình xuống còn khoảng **300KB** bằng các kỹ thuật của môn học: chưng cất tri thức [4], tỉa kênh [5] và lượng tử hoá INT8 [6].
-- **Điểm cần chú ý:** hệ thống quyết định bằng cách **so điểm tương đồng với một ngưỡng**. Sau khi lượng tử hoá, điểm số có thể bị lệch, nên ngưỡng chọn cho bản FP32 có thể không còn đúng với bản INT8. Nhóm sẽ đo và hiệu chuẩn lại ngưỡng.
+<div class="grid2">
+<div>
+
+1. **Bối cảnh và mục tiêu**
+2. **Phạm vi bài toán**
+3. **Pipeline:** model lớn, model nhỏ, xử lý trên thiết bị
+4. **Triển khai và kết quả**
+5. **Đánh giá hướng đi**
+
+</div>
+<div>
+
+<img src="assets/photo-auditorium.jpg" style="width:100%;height:320px;object-fit:cover;border-radius:12px;display:block">
+<div class="caption">Ảnh: Henry Storck · Unsplash</div>
+
+</div>
+</div>
 
 ---
 
-## Mục tiêu đồ án
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 1 · Bối cảnh và mục tiêu</span><span>29/09/2026</span><span></span>' -->
+<!-- _class: tight -->
 
-- **Mục tiêu 1. Triển khai trên ESP32-S3:** nén mô hình xác thực người nói xuống khoảng **300KB INT8** và chạy real-time với micro I2S, trong đó log-mel được tính dạng streaming để không tràn SRAM.
-- **Mục tiêu 2. So sánh ba cách nén cùng ngân sách:** chưng cất embedding từ teacher, tỉa kênh rồi tinh chỉnh, và train thẳng mô hình nhỏ làm mốc dưới. Cả ba dùng chung kiến trúc student, quy trình INT8 và board đo.
-- **Mục tiêu 3. Đánh giá trên thiết bị:** đo độ chính xác, độ trễ, RAM và điện năng của từng mô hình trên board thật, xem lượng tử hoá INT8 làm giảm chất lượng bao nhiêu và hiệu chuẩn lại ngưỡng để bù.
+## Bối cảnh và ý tưởng
+
+<div class="grid2">
+<div>
+
+<img src="assets/photo-raise-hand.jpg" style="width:100%;height:330px;object-fit:cover;border-radius:12px;display:block">
+<div class="caption">Ảnh: Vitaly Gariev · Unsplash</div>
+
+</div>
+<div>
+
+- **Hiện nay:** gọi tên mất vài phút mỗi buổi, ký giấy thì dễ ký hộ. Điểm danh bằng khuôn mặt (bài mẫu của môn) cần camera, đủ ánh sáng và máy Jetson Nano có GPU.
+- **Ý tưởng:** sinh viên nói một câu ngắn trước một thiết bị nhỏ, thiết bị nhận ra là ai và ghi vào sổ điểm danh.
+- **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện.
+- **Xử lý tại chỗ:** giọng nói không rời thiết bị, không cần mạng, có kết quả ngay.
+
+</div>
+</div>
+
+---
+
+<!-- _class: tight -->
+
+## Mục tiêu
+
+<div class="grid2">
+<div>
+
+<img src="assets/photo-microphone.jpg" style="width:100%;height:300px;object-fit:cover;border-radius:12px;display:block">
+<div class="caption">Ảnh: Kane Reinholdtsen · Unsplash</div>
+
+</div>
+<div>
+
+1. **Thiết bị điểm danh chạy được trên chip:** nói 2–3 giây, có kết quả trong khoảng 1 giây, ghi vào sổ điểm danh trên laptop.
+2. **Model nhận giọng đủ nhỏ để nạp vào chip mà vẫn nhận đúng:** thử hai cách tạo model nhỏ, chọn cách nhận đúng hơn.
+3. **Kiểm tra độ tin cậy khi dùng thật:** mức "đủ giống" chọn trên máy tính có còn đúng khi model bị nén và khi dùng trong lớp học thật không.
+
+</div>
+</div>
 
 <div class="warn">
 
-**Phạm vi:** sản phẩm gồm một hệ thống demo chạy trên ESP32-S3 và bảng đánh giá, chưa phải hệ thống kiểm soát ra vào để dùng thật.
+**Khó khăn chính:** model nhận giọng tốt hiện nay nặng khoảng 80MB, trong khi chip chỉ có 512KB bộ nhớ. Phải làm model nhỏ hơn vài trăm lần.
 
 </div>
 
 ---
 
-## Hướng thực hiện
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 2 · Phạm vi</span><span>29/09/2026</span><span></span>' -->
+
+## Bài toán: điểm danh bằng giọng nói
 
 <div class="diagram">
 
-![h:200px](diagrams/pipeline.svg)
+![h:300px](diagrams/scenario.svg)
 
 </div>
 
 <div class="tight">
 
-- **Teacher:** ECAPA-TDNN pretrained (SpeechBrain), chạy trên PC, EER khoảng 1% trên VoxCeleb1-O. Đây là mốc trên.
-- **KD:** ép embedding của student bám theo teacher, kết hợp với loss phân loại người nói.
-- **Tỉa kênh + FT:** tỉa dần kênh của teacher, đo lại sau mỗi mức rồi tinh chỉnh.
-- **Train thẳng:** train student từ đầu bằng AAM-softmax, không dùng teacher. Đây là mốc dưới.
-- **INT8 chung:** lượng tử hoá sau huấn luyện, giữ lại cả bản FP32 và INT8 của mỗi đường để tách được hai loại mất mát.
+- **Đầu vào:** 2–3 giây giọng nói, câu gợi ý "Em là [họ tên], có mặt." · **Đầu ra:** tên, MSSV, giờ điểm danh, hoặc "không nhận ra, mời nói lại".
+- **Cách dùng:** mặc định chỉ cần nói, thiết bị tự so với cả lớp. Nếu không chắc, giảng viên nhập MSSV để thiết bị so riêng với người đó.
 
 </div>
 
 ---
 
-## Hệ thống trên thiết bị
+<!-- _class: tight -->
+
+## Phạm vi bài toán
+
+<div class="grid2">
+<div>
+
+**Trong phạm vi**
+- Lớp hoặc nhóm tối đa khoảng 40 người, một thiết bị đặt tại lớp, mỗi lượt một người nói
+- Phòng học bình thường, có ồn nền vừa phải
+- Nhận giọng hoàn toàn trên chip; sổ điểm danh trên laptop, xuất được file CSV
+- Một model nhỏ khoảng 300KB, chọn từ hai cách tạo model ở phần sau
+
+</div>
+<div>
+
+**Ngoài phạm vi**
+- Chống giả mạo (ghi âm phát lại, giọng giả bằng AI): chỉ đo và báo cáo như hạn chế
+- Nhiều người nói cùng lúc, nhận dạng nội dung lời nói
+- Kết nối với hệ thống quản lý đào tạo của trường
+- Dùng cho an ninh hay kiểm soát ra vào
+
+</div>
+</div>
+
+<div class="warn">
+
+**Nguyên tắc:** kết quả là gợi ý, giảng viên vẫn kiểm tra lại được. Thiết bị chỉ lưu mẫu giọng (192 số mỗi người), không lưu file ghi âm. Chỉ thu giọng người tự nguyện có giấy đồng ý.
+
+</div>
+
+---
+
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 3 · Pipeline</span><span>29/09/2026</span><span></span>' -->
+<!-- _class: tight -->
+
+## Model lớn và model nhỏ
+
+<div class="cols" style="align-items:center">
+<div class="col" style="flex:1.6">
+<div class="hflow">
+<div class="node fill" style="flex:1.15"><b>Model lớn (teacher)</b><br>ECAPA-TDNN · khoảng 80MB<br>rất chính xác, chỉ chạy trên máy tính</div>
+<div class="ar">→</div>
+<div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của teacher</div></div>
+</div>
+<div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ so cho giống nhau</span></div></div>
+<div class="hflow">
+<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Model nhỏ (student)</b><br>khoảng 300KB, nhỏ hơn vài trăm lần<br>chạy được trên chip ESP32-S3</div>
+<div class="ar">→</div>
+<div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của student</div></div>
+</div>
+</div>
+<div class="col">
+<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">Cách A · Chưng cất</b><br>student học bắt chước dấu vân giọng của teacher (mũi tên ↕)</div>
+<div class="box" style="margin:0;border-left-color:#9aa7b8;font-size:18px"><b style="color:#1F3A68">Cách B · Train thẳng</b><br>không có teacher, student tự học từ dữ liệu có ghi "giọng này của ai"</div>
+</div>
+</div>
+
+<span class="caption">Dấu vân giọng (embedding): dãy 192 số tóm tắt đặc điểm giọng. Hai câu của cùng một người cho hai dãy số gần giống nhau.</span>
+
+- **Nén INT8:** lưu mỗi con số trong model bằng 1 byte thay vì 4 byte. Model nhỏ đi 4 lần, chip chạy nhanh hơn, đổi lại điểm số bị xê dịch chút ít.
+- **Chọn model:** đo cả hai cách trên bộ dữ liệu chuẩn VoxCeleb1-O, cách nào nhận đúng hơn thì nạp vào chip.
+
+---
+
+<!-- _class: tight -->
+
+## Xử lý trên thiết bị
+
+<div class="lane">
+<div class="lt">Đăng ký · một lần đầu khoá</div>
+<div class="hflow">
+<div class="node">Nói 3–5 câu<br>mỗi câu ~3 giây</div><div class="ar">→</div>
+<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
+<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
+<div class="node">Lấy trung bình<br>các câu</div><div class="ar">→</div>
+<div class="node">Lưu mẫu giọng<br>vào chip</div>
+</div>
+</div>
+
+<div class="lane">
+<div class="lt">Điểm danh · mỗi lượt</div>
+<div class="hflow">
+<div class="node">Nói<br>2–3 giây</div><div class="ar">→</div>
+<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
+<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
+<div class="node">So với mẫu giọng<br>cả lớp</div><div class="ar">→</div>
+<div class="node ask">Đủ giống,<br>bỏ xa người<br>thứ hai?</div><div class="ar">→</div>
+<div class="branch">
+<div class="node"><span class="tag">CÓ</span>Hiện tên, gửi về laptop</div>
+<div class="node"><span class="tag no">KHÔNG</span>Mời nói lại</div>
+</div>
+</div>
+</div>
+
+- **Đủ giống:** điểm giống nhau vượt **ngưỡng** (giải thích ở slide sau).
+- **Bỏ xa người thứ hai:** tránh nhầm giữa hai bạn có giọng gần giống nhau. Nói lại hai lần vẫn không được thì giảng viên nhập MSSV để so riêng.
+
+---
+
+<!-- _class: tight -->
+
+## Ngưỡng là gì, vì sao có thể lệch
 
 <div class="diagram">
 
-![h:130px](diagrams/device.svg)
+![h:270px](diagrams/threshold-shift.svg)
 
 </div>
 
-<div class="grid2">
-<div>
+- **Ngưỡng:** điểm giống nhau từ mức này trở lên thì nhận là đúng người. Chọn sao cho gần như không nhận nhầm người khác (≤ 1%).
+- **Vì sao lệch:** nén model, micro rẻ và phòng học thật đều làm điểm số xê dịch. Giữ ngưỡng cũ thì nhiều bạn bị từ chối nhầm hơn.
+- **Nhóm sẽ đo:** lệch bao nhiêu, và chỉnh lại ngưỡng bằng chính giọng đã đăng ký của lớp có khắc phục được không.
 
-**Ràng buộc và cách xử lý**
-- 3 giây audio 16kHz dạng float đã chiếm **192KB**, nên phải xử lý streaming theo từng khung
-- Trọng số để trong flash, tensor arena trong SRAM, chỉ tràn sang PSRAM khi cần
-- FFT dùng ESP-DSP, kernel INT8 dùng ESP-NN
+---
+
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 4 · Triển khai và kết quả</span><span>29/09/2026</span><span></span>' -->
+<!-- _class: tight -->
+
+## Phần cứng
+
+<div class="cols">
+<div class="col" style="flex:1.35">
+
+| Linh kiện | Vai trò |
+|---|---|
+| ESP32-S3 N16R8 | Thiết bị chính (16MB flash, 8MB PSRAM) |
+| INMP441 | Micro thu âm |
+| OLED 0,96" | Màn hình hiện tên |
+| Nút, buzzer | Bắt đầu lượt nói, báo kết quả |
+| INA219 | Đo điện năng tiêu thụ |
 
 </div>
-<div>
+<div class="col" style="flex:0.65">
 
-**Phần cứng (~450k)**
-- ESP32-S3 N16R8 (16MB flash, 8MB PSRAM) · 250k
-- 2 micro INMP441 (I2S) · 100k
-- INA219 đo dòng để tính µJ mỗi lần suy luận · 50k
-- Breadboard, dây cắm · 50k
+<img src="assets/photo-breadboard.jpg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;display:block;margin-top:10px">
+<div class="caption">Ảnh minh hoạ: Vishnu Mohanan · Unsplash</div>
 
 </div>
+</div>
+
+| So sánh | Jetson Nano (bài mẫu) | Raspberry Pi | ESP32-S3 (đồ án) |
+|---|---|---|---|
+| Loại thiết bị | Máy tính nhúng có GPU | Máy tính nhúng | Vi điều khiển |
+| Chi phí | Cao | Trung bình | **Thấp nhất** |
+| Điện năng | Cao | Trung bình | **Thấp, chạy pin được** |
+
+---
+
+## Kiến trúc phần mềm
+
+<div class="cols">
+<div class="col box">
+
+**Máy tính · huấn luyện**
+
+- Tính phổ âm thanh (bản chuẩn)
+- Chạy model lớn
+- Train hai model nhỏ
+- Nén INT8, chọn ngưỡng
+
+</div>
+<div class="col box">
+
+**ESP32-S3 · chương trình chip**
+
+- Thu âm, bỏ khoảng lặng
+- Tính phổ âm thanh
+- Chạy model nhỏ, so với mẫu
+- Hiện tên, gửi kết quả
+
+</div>
+<div class="col box">
+
+**Laptop · sổ điểm danh**
+
+- Nhận kết quả từ thiết bị
+- Lưu sổ, chặn ghi trùng
+- Đăng ký giọng, nhập MSSV
+- Xuất file CSV
+
+</div>
+</div>
+
+<div class="chips">
+<span class="chip alt">Máy tính: file model nhỏ</span><span class="sep">→</span><span class="chip hot">nạp vào chip ESP32-S3</span><span class="sep">→</span><span class="chip alt">kết quả điểm danh</span><span class="sep">→</span><span class="chip">laptop</span>
 </div>
 
 ---
 
-## Dữ liệu và đánh giá
+<!-- _class: tight -->
+
+## Hiện trạng và kết quả
 
 <div class="grid2">
 <div>
 
-**Dữ liệu (đều công khai)**
-- **VoxCeleb1** [2]: dùng để train, bộ thử là **VoxCeleb1-O** gốc nên so được với số đã công bố
-- **MUSAN, RIR:** nhiễu nền ở nhiều mức SNR cố định, vang phòng
-- **ASVspoof 2019 PA** [3]: tấn công phát lại
+**Đã xong**
+- Chốt bài toán, phạm vi và cách xử lý
+- Thiết kế hệ thống, chọn phần cứng
+- Kế hoạch đánh giá, repo và tài liệu
+
+**Chưa có**
+- Code huấn luyện và chương trình chip
+- Số đo thực nghiệm
 
 </div>
 <div>
 
-**Độ đo**
-- **EER** (chính), **minDCF**, đường **DET**
-- **Độ dịch ngưỡng:** FAR và FRR lệch bao nhiêu khi dùng ngưỡng FP32 cho model INT8
-- **Trên thiết bị:** kích thước, độ trễ p50/p95, RAM đỉnh, µJ mỗi lần suy luận
+| Chỉ số | Mục tiêu | Kết quả |
+|---|---|---|
+| Kích thước model | ≤ 300KB | chờ |
+| Thời gian mỗi lượt | ≤ 1 giây | chờ |
+| Nhận nhầm người khác | ≤ 1% | chờ |
+| Từ chối nhầm | đo, báo cáo | chờ |
+| Độ lệch ngưỡng | đo, báo cáo | chờ |
+| Điện năng mỗi lượt | đo, báo cáo | chờ |
+
+</div>
+</div>
+
+<div class="warn">
+
+Báo cáo này **chưa có số liệu thực nghiệm**. Cột "Kết quả" sẽ điền khi có số đo.
+
+</div>
+
+---
+
+## Cách đánh giá
+
+<div class="grid2">
+<div>
+
+**Dữ liệu**
+- **VoxCeleb1:** bộ giọng nói công khai, dùng để train và so độ chính xác với các nghiên cứu khác
+- **MUSAN:** tiếng ồn nền, để thử độ bền
+- **Thực tế:** 15–20 bạn tự nguyện, thu 2 buổi khác ngày, phòng yên tĩnh và phòng ồn
+
+</div>
+<div>
+
+**Đo gì**
+- **Model:** tỉ lệ sai trước và sau khi nén
+- **Hệ thống:** nhận đúng, nhận nhầm, từ chối nhầm, người lạ, điểm danh hộ bằng ghi âm
+- **Thiết bị:** thời gian mỗi lượt, bộ nhớ, điện năng
 
 </div>
 </div>
 
 <div class="box">
 
-**Ma trận thí nghiệm:** 3 cách nén × 2 dạng (FP32, INT8) × 4 điều kiện (sạch, nhiễu, vang, replay). Dùng chung seed và trial list, người nói trong bộ thử không có trong tập train, ngưỡng lấy từ tập val.
+**Câu hỏi chính:** mức ngưỡng chọn trên máy tính có còn dùng được sau khi nén model, và trong lớp học thật với giọng Việt qua micro rẻ không? Nếu lệch, chỉnh lại bằng giọng đã đăng ký có khắc phục được không?
 
 </div>
 
 ---
 
-## Kết quả dự kiến
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 5 · Đánh giá hướng đi</span><span>29/09/2026</span><span></span>' -->
+<!-- _class: tight -->
 
-1. **Hệ thống chạy real-time trên ESP32-S3:** xác thực người nói từ micro I2S với model INT8 khoảng 300KB, kèm số đo độ trễ, RAM và năng lượng.
-2. **Bảng so sánh ba cách nén:** EER, minDCF, kích thước, độ trễ và năng lượng, ở cả dạng FP32 và INT8, kèm đường DET.
-3. **Ảnh hưởng của lượng tử hoá INT8:** mức lệch FAR và FRR, và phần bù được khi hiệu chuẩn lại.
-4. **Đánh giá độ bền:** mức suy giảm dưới nhiễu nền, vang phòng và tấn công phát lại cho từng cách nén.
-5. **Demo trực tiếp:** người đã đăng ký được chấp nhận, người lạ và bản ghi âm phát lại bị từ chối.
+## Đánh giá hướng đi
+
+<div class="grid2">
+<div>
+
+**Điểm mạnh**
+- Bài toán thật, cùng bài toán với bài mẫu của môn nhưng trên thiết bị rẻ hơn nhiều
+- Giọng nói không rời thiết bị, chạy không cần mạng
+- Vẫn có phần nghiên cứu: so hai cách tạo model nhỏ, đo độ tin cậy khi dùng thật
+
+</div>
+<div>
+
+**Hạn chế**
+- Model nhỏ kém chính xác hơn model lớn, sẽ có lượt phải nói lại
+- Không chống được điểm danh hộ bằng ghi âm
+- Thử nghiệm thực tế ít người, chỉ đo trên một thiết bị
+
+</div>
+</div>
+
+<div class="box">
+
+**Rủi ro chính:** lập trình chip là phần khó nhất. Nếu không kịp, nhóm chuyển sang Raspberry Pi Zero 2 W mà không phải làm lại model, vì model nhỏ thiết kế cho chip cũng chạy được trên Pi.
+
+</div>
 
 ---
+
+<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>29/09/2026</span><span></span>' -->
 
 ## Tài liệu tham khảo
 
@@ -318,13 +612,16 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 1. Desplanques et al. *ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification.* Interspeech 2020.
 2. Nagrani et al. *VoxCeleb: A Large-Scale Speaker Identification Dataset.* Interspeech 2017.
-3. Todisco et al. *ASVspoof 2019: Future Horizons in Spoofed and Fake Audio Detection.* Interspeech 2019.
+3. Snyder et al. *MUSAN: A Music, Speech, and Noise Corpus.* arXiv 2015.
 4. Hinton et al. *Distilling the Knowledge in a Neural Network.* 2015.
-5. Li et al. *Pruning Filters for Efficient ConvNets.* ICLR 2017.
+5. Deng et al. *ArcFace: Additive Angular Margin Loss for Deep Face Recognition.* CVPR 2019.
 6. Jacob et al. *Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference.* CVPR 2018.
-7. David et al. *TensorFlow Lite Micro: Embedded Machine Learning for TinyML Systems.* MLSys 2021.
+7. Ravanelli et al. *SpeechBrain: A General-Purpose Speech Toolkit.* 2021.
 8. Nguyen-Tat, Bui, Ngo. *Automating attendance management in human resources.* IJIM Data Insights, 2024.
 9. Nguyen-Tat, Ngo. *Lite-XNet: An efficient deep learning model for COVID-19 lung severity assessment on embedded systems.* CVIU, 2026.
+10. David et al. *TensorFlow Lite Micro: Embedded Machine Learning for TinyML Systems.* MLSys 2021.
+
+Ảnh chụp trong slide lấy từ Unsplash (Unsplash License), tên tác giả ghi dưới từng ảnh.
 
 </div>
 

@@ -1,12 +1,11 @@
 flowchart LR
-  T["Teacher<br/>ECAPA-TDNN<br/>~20M tham số"]
-  T --> KD["KD"]
-  T --> PR["Tỉa kênh + FT"]
-  SC["Train thẳng"]
-  KD --> Q["Lượng tử hoá<br/>INT8 chung"]
-  PR --> Q
+  T["Teacher ECAPA-TDNN<br/>~20M tham số<br/>chỉ chạy trên PC"]
+  T --> KD["Chưng cất (KD)<br/>student Keras ~300KB"]
+  SC["Train thẳng<br/>student Keras ~300KB"]
+  KD --> Q["Lượng tử hoá<br/>INT8 · TFLite"]
   SC --> Q
-  Q --> E["ESP32-S3<br/>TFLite Micro"]
-  E --> M["EER · minDCF<br/>độ trễ · RAM · µJ"]
+  Q --> V["So sánh<br/>trên VoxCeleb1-O"]
+  V --> E["Model tốt hơn<br/>nạp vào ESP32-S3"]
+  E --> F["Thử nghiệm<br/>điểm danh thực tế"]
   classDef hot fill:#1F3A68,color:#ffffff,stroke:#1F3A68;
   class Q,E hot;

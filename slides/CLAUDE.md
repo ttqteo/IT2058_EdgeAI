@@ -8,8 +8,8 @@ File chính: **`slide.md`**. Sửa nội dung trong đó; giữ nguyên khối `
 - Render:
   ```bash
   npx -y @marp-team/marp-cli slide.md --html --allow-local-files -o slide.html
-  npx -y @marp-team/marp-cli slide.md --pdf  --allow-local-files   # nộp PDF
-  npx -y @marp-team/marp-cli slide.md --pptx --allow-local-files   # mở PowerPoint
+  npx -y @marp-team/marp-cli slide.md --pdf  --html --allow-local-files   # nộp PDF
+  npx -y @marp-team/marp-cli slide.md --pptx --html --allow-local-files   # mở PowerPoint
   ```
   Luôn có `--allow-local-files` (nhúng logo/ảnh cục bộ). Cảnh báo "Insecure local file" là bình thường.
 - Xem khi soạn: extension **Marp for VS Code** hoặc mở file `.html`.
@@ -53,6 +53,8 @@ File chính: **`slide.md`**. Sửa nội dung trong đó; giữ nguyên khối `
 - `.warn` — hộp lưu ý / cảnh báo (viền vàng).
 - `.grid2` — 2 cột bằng nhau; `.cols` + `.col` — cột linh hoạt.
 - `.flow` (+ `.step`, `.step.fill`, `.ar`) — sơ đồ các bước theo chiều dọc.
+- `.lane` (+ `.lt` tiêu đề) bọc `.hflow` (+ `.node`, `.node.fill`, `.node.ask`, `.ar`, `.branch`, `.tag`, `.tag.no`) — luồng xử lý ngang vẽ bằng div HTML. **Ưu tiên cách này thay cho Mermaid** khi sơ đồ là một chuỗi bước: chữ cùng font và cỡ với slide, sửa trực tiếp trong `slide.md`.
+- `.vg` (+ `.cells` chứa các `<i>` tô màu, `.cap`) — dải "dấu vân giọng"; `.pair` + `<span>` — nhãn nét đứt nối hai hàng.
 - `.chips` (+ `.chip`, `.chip.alt`, `.chip.hot`, `.sep`) — timeline pill ngang.
 - `.pipeline` — khối monospace mô tả luồng xử lý.
 - `.mono` (+ `.dim`) — minh hoạ ma trận/sơ đồ chữ nền tối.
