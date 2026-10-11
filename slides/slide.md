@@ -63,13 +63,14 @@ style: |
   }
   ol { padding-left: 22px; } ol li { margin: 11px 0; line-height: 1.45; }
   /* --- bảng bo góc + đổ bóng + zebra --- */
-  table { font-size: 21px; border-collapse: collapse; margin: 10px 0; width: 100%;
+  table { display:table !important; font-size: 21px; border-collapse: collapse; margin: 10px 0; width: 100%;
+    min-width:0; max-width:100%; box-sizing:border-box; table-layout:fixed;
     box-shadow: 0 2px 10px rgba(15,29,56,.07); border-radius: 10px; overflow: hidden; }
   thead th { background: var(--navy); color: #fff; font-weight: 600; }
   tbody tr:nth-child(even) td { background: #f6f9fe; }
-  td, th { border: 1px solid var(--line); padding: 8px 14px; }
+  td, th { border: 1px solid var(--line); padding: 8px 14px; overflow-wrap:anywhere; }
   blockquote {
-    border: none; border-left: 5px solid var(--accent);
+    border: none; border-left: 5px solid var(--navy);
     background: var(--soft); color: #20324f; padding: 12px 22px;
     border-radius: 0 12px 12px 0; margin: 12px 0;
   }
@@ -136,11 +137,10 @@ style: |
   /* --- components --- */
   .small { font-size:18px; color:var(--muted); }
   .caption { font-size:16px; color:#888; font-style:italic; }
-  .box { background:#f7faff; border:1px solid var(--line); border-left:5px solid var(--accent);
-    border-radius:0 12px 12px 0; padding:13px 22px; box-shadow:0 2px 12px rgba(15,29,56,.06); }
-  .warn { background:#fff8ec; border:1px solid #f3dca6; border-left:5px solid #e0a51e;
+  .box, .warn { background:#f7faff; border:1px solid var(--line); border-left:5px solid var(--navy);
     border-radius:0 12px 12px 0; padding:13px 22px; }
-  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; align-items:start; }
+  .grid2 { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; align-items:start; }
+  .grid2 > *, .col { min-width:0; }
   .cols { display:flex; gap:30px; } .col { flex:1; }
   .center { text-align:center; }
   .yes { color:#15803d; font-weight:700; } .no { color:#b04a4a; font-weight:700; }
@@ -175,7 +175,33 @@ style: |
   .box, .warn, .pipeline, .grid2, .cols, pre, table { margin-top:16px; margin-bottom:16px; }
   .mono { margin:8px 0; }
   /* tiện ích thu nhỏ bảng/list khi slide dày */
-  .tight table { font-size:18.5px; } .tight li { font-size:22px; }
+  section.tight table { font-size:18.5px; } section.tight li { font-size:22px; }
+  section.hardware .cols { gap:20px; }
+  section.hardware .cols table { font-size:17px; }
+  section.hardware .cols table th:first-child { width:34%; }
+  section.hardware .cols table th:last-child { width:66%; }
+  section.hardware > table { font-size:16px; }
+  section.results .results-layout { display:grid; grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);
+    gap:22px; margin:16px 0; align-items:stretch; }
+  section.results .result-card { min-width:0; min-height:320px; box-sizing:border-box;
+    background:#f7faff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; }
+  section.results .result-heading { color:var(--navy); font-weight:700; font-size:22px; margin:0 0 12px; }
+  section.results .result-placeholder { height:238px; box-sizing:border-box; border:2px dashed #bdd0ea;
+    border-radius:8px; background:#fff; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; text-align:center; gap:8px; color:var(--muted); font-size:18px; }
+  section.results .result-placeholder strong { font-size:22px; }
+  section.results .result-copy li { font-size:19px; line-height:1.35; margin:10px 0; }
+  section.evaluation .evaluation-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    gap:24px; margin:16px 0 12px; align-items:start; }
+  section.evaluation .evaluation-title { color:var(--navy); font-size:21px; font-weight:700; margin:0 0 10px; }
+  section.evaluation .evaluation-data li { font-size:19px; line-height:1.35; margin:9px 0; }
+  section.evaluation .evaluation-figure { margin:0; }
+  section.evaluation .evaluation-figure img { width:100%; height:210px; object-fit:cover;
+    object-position:center; border-radius:8px; display:block; }
+  section.evaluation .metrics-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+  section.evaluation .metric { min-width:0; background:#f7faff; border:1px solid var(--line);
+    border-left:4px solid var(--navy); border-radius:0 8px 8px 0; padding:10px 13px;
+    font-size:18px; line-height:1.3; }
   /* luồng ngang vẽ bằng div (thay cho Mermaid) */
   .lane { background:#f7faff; border:1px solid var(--line); border-radius:12px; padding:10px 14px 12px; margin:10px 0; }
   .lane .lt { font-size:15px; font-weight:700; color:var(--navy); margin:0 0 8px 2px; }
@@ -213,7 +239,7 @@ header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 
 **Trần Tú Quang** 250201084 · **Tô Huỳnh Minh Tiến** 250201095 · **Nguyễn Ấn** 250201042
 
-GVHD: ........................
+GVHD: Nguyễn Tất Bảo Thiện
 
 IT2058 · Báo cáo tiến độ đồ án môn học
 
@@ -228,7 +254,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 1. **Bối cảnh và mục tiêu**
 2. **Phạm vi bài toán**
-3. **Pipeline:** model lớn, model nhỏ, xử lý trên thiết bị
+3. **Pipeline**
 4. **Triển khai và kết quả**
 5. **Đánh giá hướng đi**
 
@@ -257,7 +283,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 </div>
 <div>
 
-- **Hiện nay:** gọi tên mất vài phút mỗi buổi, ký giấy thì dễ ký hộ. Điểm danh bằng khuôn mặt (bài mẫu của môn) cần camera, đủ ánh sáng và máy Jetson Nano có GPU.
+- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ. Bài mẫu dùng khuôn mặt, nhưng cần camera, ánh sáng tốt và Jetson Nano.
 - **Ý tưởng:** sinh viên nói một câu ngắn trước một thiết bị nhỏ, thiết bị nhận ra là ai và ghi vào sổ điểm danh.
 - **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện.
 - **Xử lý tại chỗ:** giọng nói không rời thiết bị, không cần mạng, có kết quả ngay.
@@ -307,7 +333,8 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 <div class="tight">
 
-- **Đầu vào:** 2–3 giây giọng nói, câu gợi ý "Em là [họ tên], có mặt." · **Đầu ra:** tên, MSSV, giờ điểm danh, hoặc "không nhận ra, mời nói lại".
+- **Đầu vào:** 2–3 giây giọng nói, câu gợi ý "Em là [họ tên], có mặt."
+- **Đầu ra:** tên, MSSV, giờ điểm danh, hoặc "không nhận ra, mời nói lại".
 - **Cách dùng:** mặc định chỉ cần nói, thiết bị tự so với cả lớp. Nếu không chắc, giảng viên nhập MSSV để thiết bị so riêng với người đó.
 
 </div>
@@ -368,7 +395,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 </div>
 <div class="col">
 <div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">Cách A · Chưng cất</b><br>student học bắt chước dấu vân giọng của teacher (mũi tên ↕)</div>
-<div class="box" style="margin:0;border-left-color:#9aa7b8;font-size:18px"><b style="color:#1F3A68">Cách B · Train thẳng</b><br>không có teacher, student tự học từ dữ liệu có ghi "giọng này của ai"</div>
+<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">Cách B · Train thẳng</b><br>không có teacher, student tự học từ dữ liệu có ghi "giọng này của ai"</div>
 </div>
 </div>
 
@@ -401,7 +428,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
 <div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
 <div class="node">So với mẫu giọng<br>cả lớp</div><div class="ar">→</div>
-<div class="node ask">Đủ giống,<br>bỏ xa người<br>thứ hai?</div><div class="ar">→</div>
+<div class="node ask">Nhận diện<br>chắc chắn?</div><div class="ar">→</div>
 <div class="branch">
 <div class="node"><span class="tag">CÓ</span>Hiện tên, gửi về laptop</div>
 <div class="node"><span class="tag no">KHÔNG</span>Mời nói lại</div>
@@ -409,8 +436,8 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 </div>
 </div>
 
-- **Đủ giống:** điểm giống nhau vượt **ngưỡng** (giải thích ở slide sau).
-- **Bỏ xa người thứ hai:** tránh nhầm giữa hai bạn có giọng gần giống nhau. Nói lại hai lần vẫn không được thì giảng viên nhập MSSV để so riêng.
+- **Đủ giống:** điểm giống nhau vượt **ngưỡng**.
+- **Tránh nhầm người:** nếu hai bạn có điểm gần nhau, thiết bị mời nói lại. Sau hai lần chưa rõ, giảng viên nhập MSSV để kiểm tra riêng.
 
 ---
 
@@ -431,7 +458,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 ---
 
 <!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 4 · Triển khai và kết quả</span><span>29/09/2026</span><span></span>' -->
-<!-- _class: tight -->
+<!-- _class: tight hardware -->
 
 ## Phần cứng
 
@@ -504,69 +531,70 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-<!-- _class: tight -->
+<!-- _class: tight results -->
 
 ## Hiện trạng và kết quả
 
-<div class="grid2">
-<div>
-
-**Đã xong**
-- Chốt bài toán, phạm vi và cách xử lý
-- Thiết kế hệ thống, chọn phần cứng
-- Kế hoạch đánh giá, repo và tài liệu
-
-**Chưa có**
-- Code huấn luyện và chương trình chip
-- Số đo thực nghiệm
-
+<div class="results-layout">
+<div class="result-card">
+<div class="result-heading">Biểu đồ kết quả</div>
+<div class="result-placeholder">
+<strong>Chờ số liệu thực nghiệm</strong>
+<span>Vị trí dành cho hình kết quả sau khi đo</span>
 </div>
-<div>
-
-| Chỉ số | Mục tiêu | Kết quả |
-|---|---|---|
-| Kích thước model | ≤ 300KB | chờ |
-| Thời gian mỗi lượt | ≤ 1 giây | chờ |
-| Nhận nhầm người khác | ≤ 1% | chờ |
-| Từ chối nhầm | đo, báo cáo | chờ |
-| Độ lệch ngưỡng | đo, báo cáo | chờ |
-| Điện năng mỗi lượt | đo, báo cáo | chờ |
-
+</div>
+<div class="result-card result-copy">
+<div class="result-heading">Kết quả bằng chữ</div>
+<ul>
+<li>Chưa có số đo để kết luận.</li>
+<li>Sẽ đối chiếu với mục tiêu: model ≤ 300KB, xử lý ≤ 1 giây.</li>
+<li>Sẽ báo cáo tỉ lệ nhận nhầm, từ chối nhầm và điện năng.</li>
+</ul>
 </div>
 </div>
 
 <div class="warn">
 
-Báo cáo này **chưa có số liệu thực nghiệm**. Cột "Kết quả" sẽ điền khi có số đo.
+**Hiện trạng:** nhóm đã chốt bài toán, thiết kế và cách đánh giá; phần code và số liệu thực nghiệm chưa hoàn thành.
 
 </div>
 
 ---
 
+<!-- _class: evaluation -->
+
 ## Cách đánh giá
 
-<div class="grid2">
-<div>
+<div class="evaluation-layout">
+<div class="evaluation-data">
 
-**Dữ liệu**
-- **VoxCeleb1:** bộ giọng nói công khai, dùng để train và so độ chính xác với các nghiên cứu khác
-- **MUSAN:** tiếng ồn nền, để thử độ bền
-- **Thực tế:** 15–20 bạn tự nguyện, thu 2 buổi khác ngày, phòng yên tĩnh và phòng ồn
+<div class="evaluation-title">Dữ liệu dùng để thử</div>
 
-</div>
-<div>
-
-**Đo gì**
-- **Model:** tỉ lệ sai trước và sau khi nén
-- **Hệ thống:** nhận đúng, nhận nhầm, từ chối nhầm, người lạ, điểm danh hộ bằng ghi âm
-- **Thiết bị:** thời gian mỗi lượt, bộ nhớ, điện năng
+- **VoxCeleb1:** huấn luyện và so kết quả với các nghiên cứu trước
+- **MUSAN:** thêm tiếng ồn để thử độ bền
+- **Giọng thu thực tế:** 15–20 người tự nguyện, hai ngày khác nhau, trong phòng yên tĩnh và phòng có tiếng ồn
 
 </div>
+<div>
+
+<div class="evaluation-figure">
+<img src="assets/experiment-setup-chibi.png" alt="Minh hoạ chibi bố trí thử nghiệm điểm danh bằng giọng nói">
+<div class="caption">Ảnh minh hoạ</div>
+</div>
+
+</div>
+</div>
+
+<div class="evaluation-title">Nhóm sẽ kiểm tra</div>
+<div class="metrics-row">
+<div class="metric"><strong>Model</strong><br>Sai số trước và sau khi nén</div>
+<div class="metric"><strong>Điểm danh</strong><br>Người quen, người lạ, ghi âm phát lại</div>
+<div class="metric"><strong>Thiết bị</strong><br>Thời gian, bộ nhớ và điện năng</div>
 </div>
 
 <div class="box">
 
-**Câu hỏi chính:** mức ngưỡng chọn trên máy tính có còn dùng được sau khi nén model, và trong lớp học thật với giọng Việt qua micro rẻ không? Nếu lệch, chỉnh lại bằng giọng đã đăng ký có khắc phục được không?
+**Câu hỏi chính:** ngưỡng đặt trên máy tính còn phù hợp khi model được nén và dùng trong lớp học thật không? Nếu không, mẫu giọng đã đăng ký có giúp điều chỉnh lại được không?
 
 </div>
 
@@ -631,7 +659,7 @@ Báo cáo này **chưa có số liệu thực nghiệm**. Cột "Kết quả" s�
 
 <div class="thanks">
 
-# Cảm ơn thầy/cô và các bạn đã lắng nghe
+# Cảm ơn Thầy và các bạn đã lắng nghe
 
 </div>
 
