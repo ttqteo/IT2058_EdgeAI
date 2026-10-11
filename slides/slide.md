@@ -223,7 +223,7 @@ style: |
   .pair { flex:1; text-align:center; }
   .pair span { display:inline-block; border:2px dashed var(--accent); border-radius:999px; padding:2px 14px;
     font-size:14px; font-weight:700; color:var(--navy); background:#fff; }
-footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>29/09/2026</span><span></span>'
+footer: '<span>Nhóm 9</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>10/2026</span><span></span>'
 header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 ---
 
@@ -239,11 +239,11 @@ header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 
 **Trần Tú Quang** 250201084 · **Tô Huỳnh Minh Tiến** 250201095 · **Nguyễn Ấn** 250201042
 
-GVHD: Nguyễn Tất Bảo Thiện
+GVHD: TS. Nguyễn Tất Bảo Thiện
 
 IT2058 · Báo cáo tiến độ đồ án môn học
 
-<span class="small">University of Information Technology, VNU-HCM (UIT) · TP.HCM, 29/09/2026</span>
+<span class="small">University of Information Technology, VNU-HCM (UIT) · TP.HCM, 10/2026</span>
 
 ---
 
@@ -262,14 +262,13 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div>
 
 <img src="assets/photo-auditorium.jpg" style="width:100%;height:320px;object-fit:cover;border-radius:12px;display:block">
-<div class="caption">Ảnh: Henry Storck · Unsplash</div>
 
 </div>
 </div>
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 1 · Bối cảnh và mục tiêu</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Phần 1 · Bối cảnh và mục tiêu</span><span>10/2026</span><span></span>' -->
 <!-- _class: tight -->
 
 ## Bối cảnh và ý tưởng
@@ -278,15 +277,14 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div>
 
 <img src="assets/photo-raise-hand.jpg" style="width:100%;height:330px;object-fit:cover;border-radius:12px;display:block">
-<div class="caption">Ảnh: Vitaly Gariev · Unsplash</div>
 
 </div>
 <div>
 
-- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ. Bài mẫu dùng khuôn mặt, nhưng cần camera, ánh sáng tốt và Jetson Nano.
-- **Ý tưởng:** sinh viên nói một câu ngắn trước một thiết bị nhỏ, thiết bị nhận ra là ai và ghi vào sổ điểm danh.
-- **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện.
-- **Xử lý tại chỗ:** giọng nói không rời thiết bị, không cần mạng, có kết quả ngay.
+- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ. Bài mẫu dùng khuôn mặt, nhưng cần camera, ánh sáng tốt và Jetson Nano
+- **Ý tưởng:** sinh viên nói một câu ngắn trước một thiết bị nhỏ, thiết bị nhận ra là ai và ghi vào sổ điểm danh
+- **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện
+- **Xử lý tại chỗ:** giọng nói không rời thiết bị, không cần mạng, có kết quả ngay
 
 </div>
 </div>
@@ -301,14 +299,13 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div>
 
 <img src="assets/photo-microphone.jpg" style="width:100%;height:300px;object-fit:cover;border-radius:12px;display:block">
-<div class="caption">Ảnh: Kane Reinholdtsen · Unsplash</div>
 
 </div>
 <div>
 
-1. **Thiết bị điểm danh chạy được trên chip:** nói 2–3 giây, có kết quả trong khoảng 1 giây, ghi vào sổ điểm danh trên laptop.
-2. **Model nhận giọng đủ nhỏ để nạp vào chip mà vẫn nhận đúng:** thử hai cách tạo model nhỏ, chọn cách nhận đúng hơn.
-3. **Kiểm tra độ tin cậy khi dùng thật:** mức "đủ giống" chọn trên máy tính có còn đúng khi model bị nén và khi dùng trong lớp học thật không.
+1. **Thiết bị điểm danh chạy được trên chip:** nói 2–3 giây, có kết quả trong khoảng 1 giây, ghi vào sổ điểm danh trên laptop
+2. **Model nhận giọng đủ nhỏ để nạp vào chip mà vẫn nhận đúng:** thử hai cách tạo model nhỏ, chọn cách nhận đúng hơn
+3. **Kiểm tra độ tin cậy khi dùng thật:** mức "đủ giống" chọn trên máy tính có còn đúng khi model bị nén và khi dùng trong lớp học thật không
 
 </div>
 </div>
@@ -321,7 +318,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 2 · Phạm vi</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Phần 2 · Phạm vi</span><span>10/2026</span><span></span>' -->
 
 ## Bài toán: điểm danh bằng giọng nói
 
@@ -333,9 +330,9 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 <div class="tight">
 
-- **Đầu vào:** 2–3 giây giọng nói, câu gợi ý "Em là [họ tên], có mặt."
-- **Đầu ra:** tên, MSSV, giờ điểm danh, hoặc "không nhận ra, mời nói lại".
-- **Cách dùng:** mặc định chỉ cần nói, thiết bị tự so với cả lớp. Nếu không chắc, giảng viên nhập MSSV để thiết bị so riêng với người đó.
+- **Đầu vào:** 2–3 giây giọng nói, câu gợi ý "Em tên là [họ tên], có mặt."
+- **Đầu ra:** tên, MSSV, giờ điểm danh, hoặc "không nhận ra, mời nói lại"
+- **Cách dùng:** mặc định chỉ cần nói, thiết bị tự so với cả lớp. Nếu không chắc, giảng viên nhập MSSV để thiết bị so riêng với người đó
 
 </div>
 
@@ -374,7 +371,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 3 · Pipeline</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Phần 3 · Pipeline</span><span>10/2026</span><span></span>' -->
 <!-- _class: tight -->
 
 ## Model lớn và model nhỏ
@@ -382,27 +379,28 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div class="cols" style="align-items:center">
 <div class="col" style="flex:1.6">
 <div class="hflow">
-<div class="node fill" style="flex:1.15"><b>Model lớn (teacher)</b><br>ECAPA-TDNN · khoảng 80MB<br>rất chính xác, chỉ chạy trên máy tính</div>
+<div class="node fill" style="flex:1.15"><b>Model lớn</b><br>ECAPA-TDNN · khoảng 80MB<br>rất chính xác, chỉ chạy trên máy tính</div>
 <div class="ar">→</div>
-<div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của teacher</div></div>
+<div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của model lớn</div></div>
 </div>
 <div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ so cho giống nhau</span></div></div>
 <div class="hflow">
-<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Model nhỏ (student)</b><br>khoảng 300KB, nhỏ hơn vài trăm lần<br>chạy được trên chip ESP32-S3</div>
+<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Model nhỏ</b><br>khoảng 300KB, nhỏ hơn vài trăm lần<br>chạy được trên chip ESP32-S3</div>
 <div class="ar">→</div>
-<div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của student</div></div>
+<div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của model nhỏ</div></div>
 </div>
 </div>
 <div class="col">
-<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">Cách A · Chưng cất</b><br>student học bắt chước dấu vân giọng của teacher (mũi tên ↕)</div>
-<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">Cách B · Train thẳng</b><br>không có teacher, student tự học từ dữ liệu có ghi "giọng này của ai"</div>
+<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">Cách A · Học theo model lớn</b><br>model nhỏ được chỉnh để cho ra dấu vân giọng giống model lớn (mũi tên ↕)</div>
+<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">Cách B · Tự học</b><br>không dùng model lớn, model nhỏ tự học từ dữ liệu có ghi "giọng này của ai"</div>
 </div>
 </div>
 
 <span class="caption">Dấu vân giọng (embedding): dãy 192 số tóm tắt đặc điểm giọng. Hai câu của cùng một người cho hai dãy số gần giống nhau.</span>
 
-- **Nén INT8:** lưu mỗi con số trong model bằng 1 byte thay vì 4 byte. Model nhỏ đi 4 lần, chip chạy nhanh hơn, đổi lại điểm số bị xê dịch chút ít.
-- **Chọn model:** đo cả hai cách trên bộ dữ liệu chuẩn VoxCeleb1-O, cách nào nhận đúng hơn thì nạp vào chip.
+- **Thử thách:** model nhỏ hơn vài trăm lần thì nhận giọng kém đi. Phải giữ độ chính xác cao nhất có thể trong 300KB, và chạy xong dưới 1 giây trên chip không có GPU
+- **Nén INT8:** lưu mỗi con số bằng 1 byte thay vì 4 byte, model nhỏ thêm 4 lần và chạy nhanh hơn, nhưng điểm số bị xê dịch chút ít
+- **Hai cách:** model lớn đã học từ giọng của hàng nghìn người, học theo nó có thể giúp model nhỏ nhận đúng hơn tự học. Nhóm đo cả hai, cách nào tốt hơn thì nạp vào chip
 
 ---
 
@@ -436,8 +434,8 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 </div>
 </div>
 
-- **Đủ giống:** điểm giống nhau vượt **ngưỡng**.
-- **Tránh nhầm người:** nếu hai bạn có điểm gần nhau, thiết bị mời nói lại. Sau hai lần chưa rõ, giảng viên nhập MSSV để kiểm tra riêng.
+- **Đủ giống:** điểm giống nhau vượt **ngưỡng**
+- **Tránh nhầm người:** nếu hai bạn có điểm gần nhau, thiết bị mời nói lại. Sau hai lần chưa rõ, giảng viên nhập MSSV để kiểm tra riêng
 
 ---
 
@@ -451,13 +449,13 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 </div>
 
-- **Ngưỡng:** điểm giống nhau từ mức này trở lên thì nhận là đúng người. Chọn sao cho gần như không nhận nhầm người khác (≤ 1%).
-- **Vì sao lệch:** nén model, micro rẻ và phòng học thật đều làm điểm số xê dịch. Giữ ngưỡng cũ thì nhiều bạn bị từ chối nhầm hơn.
-- **Nhóm sẽ đo:** lệch bao nhiêu, và chỉnh lại ngưỡng bằng chính giọng đã đăng ký của lớp có khắc phục được không.
+- **Ngưỡng:** điểm giống nhau từ mức này trở lên thì nhận là đúng người. Chọn sao cho gần như không nhận nhầm người khác (≤ 1%)
+- **Vì sao lệch:** nén model, micro rẻ và phòng học thật đều làm điểm số xê dịch. Giữ ngưỡng cũ thì nhiều bạn bị từ chối nhầm hơn
+- **Nhóm sẽ đo:** lệch bao nhiêu, và chỉnh lại ngưỡng bằng chính giọng đã đăng ký của lớp có khắc phục được không
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 4 · Triển khai và kết quả</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Phần 4 · Triển khai và kết quả</span><span>10/2026</span><span></span>' -->
 <!-- _class: tight hardware -->
 
 ## Phần cứng
@@ -477,7 +475,6 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div class="col" style="flex:0.65">
 
 <img src="assets/photo-breadboard.jpg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;display:block;margin-top:10px">
-<div class="caption">Ảnh minh hoạ: Vishnu Mohanan · Unsplash</div>
 
 </div>
 </div>
@@ -546,18 +543,13 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div class="result-card result-copy">
 <div class="result-heading">Kết quả bằng chữ</div>
 <ul>
-<li>Chưa có số đo để kết luận.</li>
-<li>Sẽ đối chiếu với mục tiêu: model ≤ 300KB, xử lý ≤ 1 giây.</li>
-<li>Sẽ báo cáo tỉ lệ nhận nhầm, từ chối nhầm và điện năng.</li>
+<li>Chưa có số đo để kết luận</li>
+<li>Sẽ đối chiếu với mục tiêu: model ≤ 300KB, xử lý ≤ 1 giây</li>
+<li>Sẽ báo cáo tỉ lệ nhận nhầm, từ chối nhầm và điện năng</li>
 </ul>
 </div>
 </div>
 
-<div class="warn">
-
-**Hiện trạng:** nhóm đã chốt bài toán, thiết kế và cách đánh giá; phần code và số liệu thực nghiệm chưa hoàn thành.
-
-</div>
 
 ---
 
@@ -579,7 +571,6 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 <div class="evaluation-figure">
 <img src="assets/experiment-setup-chibi.png" alt="Minh hoạ chibi bố trí thử nghiệm điểm danh bằng giọng nói">
-<div class="caption">Ảnh minh hoạ</div>
 </div>
 
 </div>
@@ -600,7 +591,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Phần 5 · Đánh giá hướng đi</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Phần 5 · Đánh giá hướng đi</span><span>10/2026</span><span></span>' -->
 <!-- _class: tight -->
 
 ## Đánh giá hướng đi
@@ -632,7 +623,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 ---
 
-<!-- footer: '<span>Nhóm: Quang · Tiến · Ấn</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>29/09/2026</span><span></span>' -->
+<!-- footer: '<span>Nhóm 9</span><span>Điểm danh bằng giọng nói trên ESP32-S3</span><span>10/2026</span><span></span>' -->
 
 ## Tài liệu tham khảo
 
@@ -649,7 +640,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 9. Nguyen-Tat, Ngo. *Lite-XNet: An efficient deep learning model for COVID-19 lung severity assessment on embedded systems.* CVIU, 2026.
 10. David et al. *TensorFlow Lite Micro: Embedded Machine Learning for TinyML Systems.* MLSys 2021.
 
-Ảnh chụp trong slide lấy từ Unsplash (Unsplash License), tên tác giả ghi dưới từng ảnh.
+Một số ảnh minh hoạ lấy từ Unsplash.
 
 </div>
 

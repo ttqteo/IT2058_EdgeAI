@@ -13,7 +13,7 @@
   <rect x="22" y="34" width="296" height="58" rx="14" fill="#eef3fb" stroke="#cdd9ec" stroke-width="1.5"/>
   <path d="M140,91 L162,91 L150,110 Z" fill="#eef3fb" stroke="#cdd9ec" stroke-width="1.5"/>
   <rect x="141" y="88" width="20" height="5" fill="#eef3fb"/>
-  <text x="170" y="69" text-anchor="middle" font-size="17" fill="#1d2b36" font-style="italic">"Em là Trần Tú Quang, có mặt."</text>
+  <text x="170" y="69" text-anchor="middle" font-size="17" fill="#1d2b36" font-style="italic">"Em tên là Nguyễn Văn A, có mặt."</text>
 
   <circle cx="150" cy="152" r="34" fill="#1F3A68"/>
   <path d="M90,292 L90,252 Q90,200 150,200 Q210,200 210,252 L210,292 Z" fill="#1F3A68"/>
@@ -30,7 +30,7 @@
 
   <!-- OLED -->
   <rect x="392" y="102" width="178" height="96" rx="8" fill="#0f1f3d"/>
-  <text x="406" y="135" font-size="17" font-weight="700" fill="#ffffff">Trần Tú Quang</text>
+  <text x="406" y="135" font-size="17" font-weight="700" fill="#ffffff">Nguyễn Văn A</text>
   <text x="406" y="162" font-size="15" font-weight="600" fill="#6ee7a0">Có mặt · 08:02</text>
   <text x="406" y="185" font-size="13" fill="#9db4d8">điểm tương đồng 0,81</text>
 
@@ -69,17 +69,17 @@
   <path d="M846,58 Q846,48 856,48 L1166,48 Q1176,48 1176,58 L1176,82 L846,82 Z" fill="#1F3A68"/>
   <text x="864" y="70" font-size="14" font-weight="600" fill="#ffffff">Sổ điểm danh · IT2058 · 12/10</text>
 
-  <text x="864" y="116" font-size="15" fill="#1d2b36">Trần Tú Quang</text>
+  <text x="864" y="116" font-size="15" fill="#1d2b36">Nguyễn Văn A</text>
   <text x="1086" y="116" text-anchor="end" font-size="14" fill="#6b7a90">08:02</text>
   <use href="#tick" x="1138" y="111"/>
   <line x1="858" y1="134" x2="1164" y2="134" stroke="#e3e9f3" stroke-width="1.5"/>
 
-  <text x="864" y="160" font-size="15" fill="#1d2b36">Tô Huỳnh Minh Tiến</text>
+  <text x="864" y="160" font-size="15" fill="#1d2b36">Trần Thị B</text>
   <text x="1086" y="160" text-anchor="end" font-size="14" fill="#6b7a90">08:03</text>
   <use href="#tick" x="1138" y="155"/>
   <line x1="858" y1="178" x2="1164" y2="178" stroke="#e3e9f3" stroke-width="1.5"/>
 
-  <text x="864" y="204" font-size="15" fill="#1d2b36">Nguyễn Ấn</text>
+  <text x="864" y="204" font-size="15" fill="#1d2b36">Lê Văn C</text>
   <text x="1086" y="204" text-anchor="end" font-size="14" fill="#9aa7b8">chưa</text>
   <circle cx="1138" cy="199" r="10" fill="none" stroke="#c3cddb" stroke-width="2"/>
   <line x1="858" y1="222" x2="1164" y2="222" stroke="#e3e9f3" stroke-width="1.5"/>

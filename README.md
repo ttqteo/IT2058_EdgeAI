@@ -1,6 +1,6 @@
 # IT2058 - Đồ án: Hệ thống điểm danh bằng giọng nói trên vi điều khiển ESP32-S3 dùng mô hình nén
 
-Đồ án môn IT2058. Sinh viên đứng trước một thiết bị nhỏ đặt ở lớp, nói một câu ngắn ("Em là [họ tên], có mặt."), thiết bị nhận ra là ai, hiện tên lên màn hình và báo về sổ điểm danh trên laptop của giảng viên. Toàn bộ phần xử lý giọng nói chạy ngay trên vi điều khiển ESP32-S3, không gửi giọng nói lên mạng. Để nạp được vào vi điều khiển, nhóm nén một mô hình xác thực người nói cỡ lớn xuống khoảng 300KB INT8 và đo xem đổi lại mất bao nhiêu độ chính xác.
+Đồ án môn IT2058. Sinh viên đứng trước một thiết bị nhỏ đặt ở lớp, nói một câu ngắn ("Em tên là [họ tên], có mặt."), thiết bị nhận ra là ai, hiện tên lên màn hình và báo về sổ điểm danh trên laptop của giảng viên. Toàn bộ phần xử lý giọng nói chạy ngay trên vi điều khiển ESP32-S3, không gửi giọng nói lên mạng. Để nạp được vào vi điều khiển, nhóm nén một mô hình xác thực người nói cỡ lớn xuống khoảng 300KB INT8 và đo xem đổi lại mất bao nhiêu độ chính xác.
 
 ![Tình huống điểm danh](slides/diagrams/scenario.svg)
 

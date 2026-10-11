@@ -18,7 +18,7 @@ Mô hình xác thực người nói tốt hiện nay (ECAPA-TDNN, khoảng 20 tr
 
 | | Mô tả |
 |---|---|
-| Đầu vào | 2–3 giây giọng nói thu qua micro INMP441. Câu gợi ý cố định: "Em là [họ tên], có mặt." |
+| Đầu vào | 2–3 giây giọng nói thu qua micro INMP441. Câu gợi ý cố định: "Em tên là [họ tên], có mặt." |
 | Đầu ra | Tên và MSSV của người điểm danh, hoặc "không nhận ra, mời nói lại". Kèm giờ điểm danh và điểm tương đồng. |
 | Nơi hiển thị | Màn hình OLED trên thiết bị (kèm tiếng bíp), và app sổ điểm danh trên laptop của giảng viên để xem danh sách, xuất CSV. |
 
