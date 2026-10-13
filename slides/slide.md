@@ -281,7 +281,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 </div>
 <div>
 
-- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ. Bài mẫu dùng khuôn mặt, nhưng cần camera, ánh sáng tốt và Jetson Nano
+- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ.
 - **Ý tưởng:** sinh viên nói một câu ngắn trước một thiết bị nhỏ, thiết bị nhận ra là ai và ghi vào sổ điểm danh
 - **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện
 - **Xử lý tại chỗ:** giọng nói không rời thiết bị, không cần mạng, có kết quả ngay
@@ -379,28 +379,27 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 <div class="cols" style="align-items:center">
 <div class="col" style="flex:1.6">
 <div class="hflow">
-<div class="node fill" style="flex:1.15"><b>Model lớn</b><br>ECAPA-TDNN · khoảng 80MB<br>rất chính xác, chỉ chạy trên máy tính</div>
+<div class="node fill" style="flex:1.15"><b>Teacher · ECAPA-TDNN</b><br>SpeechBrain · frozen CPU<br><span style="font-size:15px;color:#dbe7ff">speechbrain/<br>spkrec-ecapa-voxceleb</span></div>
 <div class="ar">→</div>
 <div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của model lớn</div></div>
 </div>
-<div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ so cho giống nhau</span></div></div>
+<div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ khớp embedding</span></div></div>
 <div class="hflow">
-<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Model nhỏ</b><br>khoảng 300KB, nhỏ hơn vài trăm lần<br>chạy được trên chip ESP32-S3</div>
+<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Student encoders</b><br><span style="font-size:15px">Baseline CNN<br>Conv3 two-bin CNN</span><br>embedding 192</div>
 <div class="ar">→</div>
 <div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của model nhỏ</div></div>
 </div>
 </div>
 <div class="col">
-<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">Cách A · Học theo model lớn</b><br>model nhỏ được chỉnh để cho ra dấu vân giọng giống model lớn (mũi tên ↕)</div>
-<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">Cách B · Tự học</b><br>không dùng model lớn, model nhỏ tự học từ dữ liệu có ghi "giọng này của ai"</div>
+<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">KD + AAM-softmax</b><br>student nhận hướng dẫn từ teacher qua embedding</div>
+<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">AAM-softmax supervised</b><br>nhánh supervised độc lập: học theo nhãn speaker, không dùng teacher</div>
 </div>
 </div>
 
-<span class="caption">Dấu vân giọng (embedding): dãy 192 số tóm tắt đặc điểm giọng. Hai câu của cùng một người cho hai dãy số gần giống nhau.</span>
+<span class="caption">Embedding: 192 số tóm tắt đặc điểm giọng · AAM head chỉ dùng lúc train; encoder xuất riêng.</span>
 
-- **Thử thách:** model nhỏ hơn vài trăm lần thì nhận giọng kém đi. Phải giữ độ chính xác cao nhất có thể trong 300KB, và chạy xong dưới 1 giây trên chip không có GPU
-- **Nén INT8:** lưu mỗi con số bằng 1 byte thay vì 4 byte, model nhỏ thêm 4 lần và chạy nhanh hơn, nhưng điểm số bị xê dịch chút ít
-- **Hai cách:** model lớn đã học từ giọng của hàng nghìn người, học theo nó có thể giúp model nhỏ nhận đúng hơn tự học. Nhóm đo cả hai, cách nào tốt hơn thì nạp vào chip
+- **Đích triển khai:** ESP32-S3; chưa có kiểm thử trên board, latency hay power
+- **INT8:** Baseline CNN **153.992 byte** · Conv3 two-bin CNN **46.960 byte**
 
 ---
 
@@ -465,7 +464,7 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 | Linh kiện | Vai trò |
 |---|---|
-| ESP32-S3 N16R8 | Thiết bị chính (16MB flash, 8MB PSRAM) |
+| ESP32-S3 | Thiết bị chính (512 KB SRAM) |
 | INMP441 | Micro thu âm |
 | OLED 0,96" | Màn hình hiện tên |
 | Nút, buzzer | Bắt đầu lượt nói, báo kết quả |
@@ -534,19 +533,29 @@ IT2058 · Báo cáo tiến độ đồ án môn học
 
 <div class="results-layout">
 <div class="result-card">
-<div class="result-heading">Biểu đồ kết quả</div>
-<div class="result-placeholder">
-<strong>Chờ số liệu thực nghiệm</strong>
-<span>Vị trí dành cho hình kết quả sau khi đo</span>
-</div>
+<div class="result-heading">EER validation · FP32 và INT8</div>
+<table style="font-size:17px;margin:0 0 10px 0">
+<thead>
+<tr><th>Thiết lập</th><th>FP32<br>EER</th><th>INT8<br>EER</th><th>INT8<br>top1</th></tr>
+</thead>
+<tbody>
+<tr><td>Baseline<br><span class="small">supervised</span></td><td>13,33%</td><td>13,06%</td><td>38/45</td></tr>
+<tr><td>Baseline<br><span class="small">KD</span></td><td>13,61%</td><td>13,89%</td><td>39/45</td></tr>
+<tr><td>Conv3<br><span class="small">supervised</span></td><td>42,22%</td><td>40,56%</td><td>14/45</td></tr>
+<tr><td>Conv3<br><span class="small">KD</span></td><td>42,22%</td><td>40,28%</td><td>9/45</td></tr>
+</tbody>
+</table>
+<div class="caption">45 query · 5 speaker · LibriSpeech validation</div>
+<div class="caption">Nguồn: independent audit + frozen run reports</div>
 </div>
 <div class="result-card result-copy">
-<div class="result-heading">Kết quả bằng chữ</div>
-<ul>
-<li>Chưa có số đo để kết luận</li>
-<li>Sẽ đối chiếu với mục tiêu: model ≤ 300KB, xử lý ≤ 1 giây</li>
-<li>Sẽ báo cáo tỉ lệ nhận nhầm, từ chối nhầm và điện năng</li>
+<div class="result-heading">Kết quả chính</div>
+<ul style="margin-top:0">
+<li style="font-size:18px;line-height:1.3;margin:7px 0"><strong>Tốt nhất:</strong> baseline supervised, INT8 EER <em>13,06%</em> (FP32 <em>13,33%</em>); top1 INT8 <strong>38/45</strong> truy vấn.</li>
+<li style="font-size:18px;line-height:1.3;margin:7px 0"><strong>Đánh đổi kích thước:</strong> Conv3 INT8 <strong>46.960 byte</strong>, nhỏ hơn baseline <strong>153.992 byte</strong> khoảng 3,3 lần; EER INT8 ở mức 40,28–40,56%.</li>
+<li style="font-size:18px;line-height:1.3;margin:7px 0"><strong>Chạy thử:</strong> TFLM host Mac Invoke pass <strong>4/4</strong> run; chưa có xác nhận trên bo ESP32-S3.</li>
 </ul>
+<div class="caption" style="margin-top:8px">Dữ liệu: 2.400 train + 60 validation; bảng dùng 45 query của 5 speaker. Đây chưa phải test độc lập, VoxCeleb hay dữ liệu thực địa; chưa kết luận open-set FAR, latency hoặc công suất.</div>
 </div>
 </div>
 
