@@ -1,0 +1,78 @@
+{
+  "status": "INDEPENDENT_DATA_AUDIT_PASS",
+  "scope": "TRAIN only; no model inference",
+  "counts": {
+    "utterances": 28539,
+    "speakers": 251,
+    "windows": 135438,
+    "source_frames": 5794034668,
+    "padded_samples": 706989332
+  },
+  "source_hours": 100.59087965277777,
+  "train_diagnostics": {
+    "exact_zero_feature_rows": 0
+  },
+  "replays": [
+    {
+      "index": 0,
+      "window_id": "103-1240-0000@0000000000",
+      "pcm_exact": true,
+      "features_exact": true,
+      "valid_samples": 48000
+    },
+    {
+      "index": 4,
+      "window_id": "103-1240-0000@0000192000",
+      "pcm_exact": true,
+      "features_exact": true,
+      "valid_samples": 33360
+    },
+    {
+      "index": 45146,
+      "window_id": "322-124147-0068@0000240000",
+      "pcm_exact": true,
+      "features_exact": true,
+      "valid_samples": 16000
+    },
+    {
+      "index": 90292,
+      "window_id": "6000-86686-0018@0000096000",
+      "pcm_exact": true,
+      "features_exact": true,
+      "valid_samples": 48000
+    },
+    {
+      "index": 135437,
+      "window_id": "911-130578-0020@0000096000",
+      "pcm_exact": true,
+      "features_exact": true,
+      "valid_samples": 38640
+    }
+  ],
+  "bindings": {
+    "train-clean-100.tar.gz": {
+      "bytes": 6387309499,
+      "sha256": "d4ddd1d5a6ab303066f14971d768ee43278a5f2a0aa43dc716b0e64ecbbbf6e2"
+    },
+    "manifest.json": {
+      "bytes": 54113923,
+      "sha256": "23d5035c99eb911ecdf605a4683e62e95f09c993a368eece4e5ba3421c17770e"
+    },
+    "provenance.json": {
+      "bytes": 928,
+      "sha256": "ef78b5b54bbb1c00a88e13413a41e30947a2c4404587605a1c1f35f055011f2b"
+    },
+    "pcm_int16.npy": {
+      "bytes": 13002048128,
+      "sha256": "dd40fd440a7896aa871ac38ecdc4f7358a999ae34c42e504aec4d672055e7c06"
+    },
+    "features.npy": {
+      "bytes": 6457683968,
+      "sha256": "388693c334bd31492cf0481ec4eb25f97eb099b2df70c35689637d4e25b07c32"
+    },
+    "audit_full100_data.py": {
+      "bytes": 6043,
+      "sha256": "65a7a882094aedc74b2617143e66e4f2e87e8397619c2f0e6cb4c5be8c3dcc01"
+    }
+  }
+}

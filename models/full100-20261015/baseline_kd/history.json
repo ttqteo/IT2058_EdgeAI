@@ -1,0 +1,382 @@
+[
+  {
+    "batch_count": 6772,
+    "epoch": 1,
+    "improved": true,
+    "rows_seen": 135438,
+    "schedule_digest": "e1edb84e6b87563bc1634a033434517aecb27b518b5611615dfbae6a977cb182",
+    "train_aam_loss": 8.027611438012958,
+    "train_kd_loss": 0.8963175560684885,
+    "train_total_loss": 8.923928994081445,
+    "validation_eer": 0.06944444444444445,
+    "validation_eer_threshold": 0.7561973850351438,
+    "validation_top1": {
+      "accuracy": 0.9555555555555556,
+      "correct": 43,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 2,
+    "improved": true,
+    "rows_seen": 135438,
+    "schedule_digest": "acec60410c53c4243015f501668c1968a2ba91a2fe0a12731c4d0a7612e9501f",
+    "train_aam_loss": 5.044017429240482,
+    "train_kd_loss": 0.9286850166820037,
+    "train_total_loss": 5.972702445922486,
+    "validation_eer": 0.04722222222222222,
+    "validation_eer_threshold": 0.6981902549214852,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 3,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "6075f9c1fbd61e2ce910700124408427a23cb3c4d1dafa48423905fb5b405ae3",
+    "train_aam_loss": 4.735235979814965,
+    "train_kd_loss": 0.8685451567672064,
+    "train_total_loss": 5.60378113658217,
+    "validation_eer": 0.06666666666666667,
+    "validation_eer_threshold": 0.6604010217914376,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 4,
+    "improved": true,
+    "rows_seen": 135438,
+    "schedule_digest": "07bb711eecc866591a7bbfd046ccc9ad3c612f31ab3cd80d6f6603a4ea1fc029",
+    "train_aam_loss": 4.536024502046359,
+    "train_kd_loss": 0.8269400659260785,
+    "train_total_loss": 5.362964567972438,
+    "validation_eer": 0.044444444444444446,
+    "validation_eer_threshold": 0.6538688154789158,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 5,
+    "improved": true,
+    "rows_seen": 135438,
+    "schedule_digest": "1aab603deb3347f25d225d5e9a0f0258e52d0929a65cc1d9c0a98d47a725c21b",
+    "train_aam_loss": 4.393028686086173,
+    "train_kd_loss": 0.7999008685127293,
+    "train_total_loss": 5.192929554598902,
+    "validation_eer": 0.027777777777777776,
+    "validation_eer_threshold": 0.6196482636258864,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 6,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "7605a6ecfa5545b9489c8a624c0509dd82b6a2524c93bc7e888f908ce59902ab",
+    "train_aam_loss": 4.278897431276678,
+    "train_kd_loss": 0.782360857083583,
+    "train_total_loss": 5.0612582883602615,
+    "validation_eer": 0.04166666666666667,
+    "validation_eer_threshold": 0.5978733385839339,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 7,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "6005949ee0369284ce65404251b764b945681b22866de3178e3ebbb43703d01b",
+    "train_aam_loss": 4.179317285222433,
+    "train_kd_loss": 0.7704196654802677,
+    "train_total_loss": 4.949736950702701,
+    "validation_eer": 0.04722222222222222,
+    "validation_eer_threshold": 0.5623213566426024,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 8,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "63ff5929dc5d289760cc79009b7bf8382f60281df99fffbc5c55bc9edac63df4",
+    "train_aam_loss": 4.104716723337978,
+    "train_kd_loss": 0.7619638566904354,
+    "train_total_loss": 4.8666805800284125,
+    "validation_eer": 0.04722222222222222,
+    "validation_eer_threshold": 0.5545742269519478,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 9,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "3a7280bbd937d3838e2c4095843e1746d55adda533faebf8716c64e5ae108792",
+    "train_aam_loss": 4.042783353674931,
+    "train_kd_loss": 0.7559122564839493,
+    "train_total_loss": 4.79869561015888,
+    "validation_eer": 0.044444444444444446,
+    "validation_eer_threshold": 0.5669102410349856,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 10,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "786c73b49330a8f3d83ed44b2aec0517209c7b9bdae741a92ecd5a451d4ffdaa",
+    "train_aam_loss": 3.9960219845289946,
+    "train_kd_loss": 0.7511887233807474,
+    "train_total_loss": 4.747210707909742,
+    "validation_eer": 0.044444444444444446,
+    "validation_eer_threshold": 0.5404832183901281,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 11,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "1d70b313315560fac1761667dc9afae76e448c0e10b42a94da955b706a2ec4c8",
+    "train_aam_loss": 3.9602277685946383,
+    "train_kd_loss": 0.7471778845219863,
+    "train_total_loss": 4.707405653116624,
+    "validation_eer": 0.06666666666666667,
+    "validation_eer_threshold": 0.5110375980602399,
+    "validation_top1": {
+      "accuracy": 0.9777777777777777,
+      "correct": 44,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 12,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "1eb5414aaca6191cdd5e38437199287979128186a9d191e0edbc48ae976faf6d",
+    "train_aam_loss": 3.932669657499866,
+    "train_kd_loss": 0.7437937185290391,
+    "train_total_loss": 4.676463376028905,
+    "validation_eer": 0.044444444444444446,
+    "validation_eer_threshold": 0.554102897484643,
+    "validation_top1": {
+      "accuracy": 0.9777777777777777,
+      "correct": 44,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 13,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "8c40b4b0761c8fa3fe59f01fbd9d248b2437004dca538a00ac48f2f4c2c18c85",
+    "train_aam_loss": 3.900244799843798,
+    "train_kd_loss": 0.740977379165261,
+    "train_total_loss": 4.641222179009059,
+    "validation_eer": 0.05,
+    "validation_eer_threshold": 0.5040413666493069,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 14,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "0921e5360e034e1556b3a59cf9c7558502c246fbefb807bfa1f7ab53821846ce",
+    "train_aam_loss": 3.8859386447031583,
+    "train_kd_loss": 0.7384239620596215,
+    "train_total_loss": 4.62436260676278,
+    "validation_eer": 0.05,
+    "validation_eer_threshold": 0.5007342390004497,
+    "validation_top1": {
+      "accuracy": 0.9777777777777777,
+      "correct": 44,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 15,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "bc3921725d719aa920527882904d123a4472395304f9d85b73bea849e6c94f52",
+    "train_aam_loss": 3.865956596861059,
+    "train_kd_loss": 0.7361011469831892,
+    "train_total_loss": 4.602057743844248,
+    "validation_eer": 0.06388888888888888,
+    "validation_eer_threshold": 0.48946108665609284,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 16,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "77c2dafdcdbefee82e6ada9416e267420a5a9312e6e36f247d9f50b86cebb2e5",
+    "train_aam_loss": 3.8453914153485944,
+    "train_kd_loss": 0.733901661368368,
+    "train_total_loss": 4.579293076716962,
+    "validation_eer": 0.06388888888888888,
+    "validation_eer_threshold": 0.5045291392075977,
+    "validation_top1": {
+      "accuracy": 0.9777777777777777,
+      "correct": 44,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 17,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "239a3ad23733e9f0fe31216c83f671534579e616885471cd87bcbb6f7e513e90",
+    "train_aam_loss": 3.8338756864323926,
+    "train_kd_loss": 0.7318340834861656,
+    "train_total_loss": 4.565709769918558,
+    "validation_eer": 0.04722222222222222,
+    "validation_eer_threshold": 0.5194493965860951,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 18,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "292fc00e930573bb0cc0595d5b6606cf0f21604abd314dc25bf1b4d97572aa3d",
+    "train_aam_loss": 3.8183327834887018,
+    "train_kd_loss": 0.7299793420163405,
+    "train_total_loss": 4.548312125505042,
+    "validation_eer": 0.05,
+    "validation_eer_threshold": 0.5171269718371883,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 19,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "92458010f1134fcad128d2bd9938adafdac32be4b09f0afbe5f9b463e39ffc4b",
+    "train_aam_loss": 3.806550210093024,
+    "train_kd_loss": 0.7282018206315958,
+    "train_total_loss": 4.534752030724619,
+    "validation_eer": 0.044444444444444446,
+    "validation_eer_threshold": 0.5107438093117698,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  },
+  {
+    "batch_count": 6772,
+    "epoch": 20,
+    "improved": false,
+    "rows_seen": 135438,
+    "schedule_digest": "ebff3a26afc4bebde2181c5df437113260d9ee76841a870eb7fdfd8b5cdd14a9",
+    "train_aam_loss": 3.7934596257864346,
+    "train_kd_loss": 0.7265506239327402,
+    "train_total_loss": 4.520010249719175,
+    "validation_eer": 0.04722222222222222,
+    "validation_eer_threshold": 0.4976924495863433,
+    "validation_top1": {
+      "accuracy": 1.0,
+      "correct": 45,
+      "scope": "validation-only diagnostic; not model selection",
+      "tie_policy": "sorted validation speaker order first maximum",
+      "total": 45
+    }
+  }
+]

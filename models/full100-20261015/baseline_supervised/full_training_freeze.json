@@ -1,0 +1,189 @@
+{
+  "checkpoint_bindings": {
+    "best": {
+      "checkpoint": {
+        "bytes": 163,
+        "sha256": "0a7c933eece00ea85fe8c3da8ed0ad2adebd7bc721d06c6306c0dfd7eb1ffc60"
+      },
+      "ckpt-4.data-00000-of-00001": {
+        "bytes": 2335780,
+        "sha256": "1e20308fc53da6ef2ed1a60c9909b9aa7f73ac38c6b13b36c3a724026710fcc0"
+      },
+      "ckpt-4.index": {
+        "bytes": 1459,
+        "sha256": "47deef60ed117a6ceabe205760dc1a9cf2a5a91a3327b04e2c14f90efd33b90f"
+      }
+    },
+    "latest": {
+      "checkpoint": {
+        "bytes": 256,
+        "sha256": "2087afbbd2860fa78629f74e1cb241fa103272417f94c4aa65fa1217b04831c3"
+      },
+      "ckpt-18.data-00000-of-00001": {
+        "bytes": 2335780,
+        "sha256": "9bcd5aec69dedf91c6fab5b0214a2d98c9ac61c0b109ce4f8fd7d40e9a2ccba6"
+      },
+      "ckpt-18.index": {
+        "bytes": 1459,
+        "sha256": "5c673632440931578875b1b83173c9109d9a97e13c73c3106391ada89fd34dfc"
+      },
+      "ckpt-19.data-00000-of-00001": {
+        "bytes": 2335780,
+        "sha256": "44da05af70e10cb992fed145e347aa3c9f5ce2a0631f510dcee696b87112a176"
+      },
+      "ckpt-19.index": {
+        "bytes": 1459,
+        "sha256": "0b904de47b6106e8fd47c62d1dca2e95900240234c00ebb77008a1b5a20c04a4"
+      }
+    },
+    "portable_best": {
+      "classifier": {
+        "bytes": 174940,
+        "path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised/classifier_best.npz",
+        "sha256": "a202eb72c14ca35d07f3d6661dfe16474b12e08cab7b9f55b8efa4ac461133b5"
+      },
+      "encoder": {
+        "bytes": 605656,
+        "path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised/encoder_best.weights.h5",
+        "sha256": "248555aa84a962855d2175f32d4718400c386f3b2bfd14bfbff17c74126d585a"
+      }
+    }
+  },
+  "config": {
+    "aam_margin": 0.2,
+    "aam_scale": 30.0,
+    "architecture": "baseline_conv8",
+    "batch_size": 20,
+    "class_count": 251,
+    "embedding_dim": 192,
+    "feature_shape": [
+      298,
+      40,
+      1
+    ],
+    "format_version": 1,
+    "input_bindings": {
+      "dataset": {
+        "feature_shape": [
+          135438,
+          298,
+          40,
+          1
+        ],
+        "manifest_content_sha256": "6a12827b337329782092c1fabddba1f126274d06b05b936fe05f2339ab80c70c",
+        "manifest_sha256": "23d5035c99eb911ecdf605a4683e62e95f09c993a368eece4e5ba3421c17770e",
+        "pcm_shape": [
+          135438,
+          48000
+        ],
+        "root": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/data",
+        "row_count": 135438,
+        "verification": "full_data.load_full_dataset(verify_hashes=True)"
+      },
+      "train_speakers_sha256": "3eea8204eec6528d9a7e0d58a3e059110626c3ddab77e2b9bdc6c62d07f22463",
+      "validation": {
+        "features_sha256": "63db8785e1ef0b58183173e78128572c4d5311cb55f038f4e39427a3dad6339f",
+        "manifest_sha256": "237e15b999292460daf3e5ddf98916fe5f05b37cd5b768881df0bdf5ca11d75d",
+        "provenance_sha256": "b309ee29fdd95f8128cf35fb30cf25debee574df2c588219002c8c67229c329d",
+        "root": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/datasets/librispeech-dev-clean/prepared",
+        "row_count": 60,
+        "row_ids_sha256": "cdfff77512b4d223ecddb02888b3818677e40e29a6d4e151161b7faf3e5f951f",
+        "verification": "load_validation_dataset(verify_hashes=True); validation split only"
+      },
+      "validation_speakers_sha256": "03bea8523a699f768427f85dd6fae64832971e64b5baffc1f04a3905f9611fc7"
+    },
+    "kd_weight": 0.0,
+    "max_epochs": 80,
+    "method": "supervised_aam",
+    "optimizer": {
+      "amsgrad": false,
+      "beta_1": 0.9,
+      "beta_2": 0.999,
+      "clipnorm": null,
+      "epsilon": 1e-07,
+      "learning_rate": 0.001,
+      "name": "Adam"
+    },
+    "output_dir": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised",
+    "patience": 15,
+    "runtime_versions": {
+      "keras": "3.15.1",
+      "numpy": "2.2.6",
+      "python": "3.11.16",
+      "tensorflow": "2.20.0"
+    },
+    "sampler": {
+      "full_train_coverage": true,
+      "no_replacement": true,
+      "variable_windows_per_speaker": true,
+      "version": "interleaved-active-speaker-round-robin-v1"
+    },
+    "seed": 20261012,
+    "selection": {
+      "enrollment_rows_per_speaker": 3,
+      "metric": "validation_eer",
+      "patience_counts": "non-improvements including ties",
+      "query_rows_per_speaker": 9,
+      "rule": "strict minimum; earliest tie",
+      "validation_rows": 60
+    },
+    "source_bindings": {
+      "budget.py": "122385045720071ef40a6367ba5cb79e5e7698c5e7484ff7a813522c51ca4742",
+      "comparative_training.py": "56b61a95a940ebf4f4127890562f636931d121dcb2b04cd3babf5863649f2a80",
+      "evaluation.py": "c98b09a39ebc348209c0d42500742eb5c97bd791c541c94dbc2b6759eab0e060",
+      "frontend.py": "6f3508b2933b58e3332de1b8554c80e315f6aa036c2760f3966aa861ec74a31b",
+      "full_data.py": "f7cd786263f1e53ba76879e19d23c27c3fbe8933c34348faee15950a4256bdc6",
+      "full_training.py": "a1c4b03e067bf6ff5a2dfadf303105514bacfe561fdf46e7f928cef43d8c8207",
+      "model.py": "14e836a91f7392078cd0833e527082d34c1ce7cdf188a0e6f2be8a23271a823f",
+      "training.py": "281a802d56699d82fb356faefdc3395e3e16948e20defbad42540ae1ed34f320"
+    }
+  },
+  "config_sha256": "76aa815fc4735f1dbc1a921a4e355b0395844d06cc165bffe0de3d21afd3d0e9",
+  "evaluation": {
+    "calibration": null,
+    "status": "NOT_RUN",
+    "test": null
+  },
+  "format_version": 1,
+  "input_bindings": {
+    "dataset": {
+      "feature_shape": [
+        135438,
+        298,
+        40,
+        1
+      ],
+      "manifest_content_sha256": "6a12827b337329782092c1fabddba1f126274d06b05b936fe05f2339ab80c70c",
+      "manifest_sha256": "23d5035c99eb911ecdf605a4683e62e95f09c993a368eece4e5ba3421c17770e",
+      "pcm_shape": [
+        135438,
+        48000
+      ],
+      "root": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/data",
+      "row_count": 135438,
+      "verification": "full_data.load_full_dataset(verify_hashes=True)"
+    },
+    "train_speakers_sha256": "3eea8204eec6528d9a7e0d58a3e059110626c3ddab77e2b9bdc6c62d07f22463",
+    "validation": {
+      "features_sha256": "63db8785e1ef0b58183173e78128572c4d5311cb55f038f4e39427a3dad6339f",
+      "manifest_sha256": "237e15b999292460daf3e5ddf98916fe5f05b37cd5b768881df0bdf5ca11d75d",
+      "provenance_sha256": "b309ee29fdd95f8128cf35fb30cf25debee574df2c588219002c8c67229c329d",
+      "root": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/datasets/librispeech-dev-clean/prepared",
+      "row_count": 60,
+      "row_ids_sha256": "cdfff77512b4d223ecddb02888b3818677e40e29a6d4e151161b7faf3e5f951f",
+      "verification": "load_validation_dataset(verify_hashes=True); validation split only"
+    },
+    "validation_speakers_sha256": "03bea8523a699f768427f85dd6fae64832971e64b5baffc1f04a3905f9611fc7"
+  },
+  "source_bindings": {
+    "budget.py": "122385045720071ef40a6367ba5cb79e5e7698c5e7484ff7a813522c51ca4742",
+    "comparative_training.py": "56b61a95a940ebf4f4127890562f636931d121dcb2b04cd3babf5863649f2a80",
+    "evaluation.py": "c98b09a39ebc348209c0d42500742eb5c97bd791c541c94dbc2b6759eab0e060",
+    "frontend.py": "6f3508b2933b58e3332de1b8554c80e315f6aa036c2760f3966aa861ec74a31b",
+    "full_data.py": "f7cd786263f1e53ba76879e19d23c27c3fbe8933c34348faee15950a4256bdc6",
+    "full_training.py": "a1c4b03e067bf6ff5a2dfadf303105514bacfe561fdf46e7f928cef43d8c8207",
+    "model.py": "14e836a91f7392078cd0833e527082d34c1ce7cdf188a0e6f2be8a23271a823f",
+    "training.py": "281a802d56699d82fb356faefdc3395e3e16948e20defbad42540ae1ed34f320"
+  },
+  "status": "FROZEN_BEFORE_EXPORT"
+}

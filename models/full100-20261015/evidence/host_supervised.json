@@ -1,0 +1,591 @@
+{
+  "bindings": {
+    "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised/encoder_int8.tflite": {
+      "bytes": 154000,
+      "sha256": "dfb7de00a1679df92d5795b8ec23986d32c2105372124e9edbbe09e844584543"
+    },
+    "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/tflm-host/edgeai_tflm_host": {
+      "bytes": 379664,
+      "sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92"
+    },
+    "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/tflm-host/edgeai_tflm_host.build.json": {
+      "bytes": 1109,
+      "sha256": "f799c61963b97707e6a35e2be6566365e5b23acbf6fbcb88bed4788ba9183987"
+    }
+  },
+  "hardware_status": "UNVERIFIED_HARDWARE",
+  "manifest_sha256": "23d5035c99eb911ecdf605a4683e62e95f09c993a368eece4e5ba3421c17770e",
+  "reference_mode": "BUILTIN_REF_NO_DELEGATES",
+  "scope": "EXPERIMENTAL_HOST_ONLY",
+  "status": "PASS",
+  "synthetic_tflm": {
+    "arena_capacity_bytes": 131072,
+    "binary_sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92",
+    "budget": {
+      "checks": [
+        {
+          "message": "model bytes are within the decimal profile limit",
+          "name": "model_bytes",
+          "status": "PASS"
+        },
+        {
+          "message": "FlatBuffer schema version is 3",
+          "name": "schema_version",
+          "status": "PASS"
+        },
+        {
+          "message": "model has one subgraph",
+          "name": "subgraph_count",
+          "status": "PASS"
+        },
+        {
+          "message": "all buffers use inline FlatBuffer storage",
+          "name": "buffer_storage_mode",
+          "status": "PASS"
+        },
+        {
+          "message": "tensor shapes, types, and relevant quantization metadata are valid",
+          "name": "tensor_metadata",
+          "status": "PASS"
+        },
+        {
+          "details": {
+            "input_shape": [
+              1,
+              298,
+              40,
+              1
+            ],
+            "layout": "NHWC",
+            "output_shape": [
+              1,
+              192
+            ]
+          },
+          "message": "static INT8 I/O matches the experimental host-only shape contract",
+          "name": "host_io_contract",
+          "status": "PASS"
+        },
+        {
+          "message": "all operators, options, shapes, and integer metadata passed",
+          "name": "graph_structure",
+          "status": "PASS"
+        }
+      ],
+      "contract_discovery": "BOOTSTRAP-CONTRACT-01",
+      "contract_status": "CONTRACT_UNRESOLVED",
+      "errors": [],
+      "evidence": {
+        "budget_source": "docs/bai-toan-diem-danh.md, budget table line 99",
+        "host_scope_source": "docs/host-prototype-contract.md",
+        "interpretation": "the host tensor layout is experimental host-only evidence; final frontend/layout/runtime and board contract remain unresolved",
+        "operator_version_policy": "NEW_LOCAL_STATIC_ALLOWLIST; not a claim of TFLM version support; actual host invoke/runtime remains a separate oracle",
+        "quantization_source": "https://developers.google.com/edge/litert/conversion/tensorflow/quantization/quantization_spec",
+        "schema_source": "https://github.com/tensorflow/tensorflow/blob/v2.20.0/tensorflow/compiler/mlir/lite/schema/schema.fbs"
+      },
+      "gates": {
+        "macs": {
+          "actual": 360480,
+          "limit": 50000000,
+          "status": "PASS",
+          "unit": "MACs_per_inference"
+        },
+        "model_bytes": {
+          "actual": 154000,
+          "limit": 300000,
+          "status": "PASS",
+          "unit": "decimal_bytes"
+        },
+        "sram": {
+          "reason": "this static checker does not measure TFLM arena or total board SRAM",
+          "status": "UNVERIFIED_HARDWARE",
+          "target": 200000
+        }
+      },
+      "macs": {
+        "breakdown": [
+          {
+            "dilation": [
+              1,
+              1
+            ],
+            "formula": "output_elements * kernel_h * kernel_w * input_channels (groups=1)",
+            "input_channels": 1,
+            "input_shape": [
+              1,
+              298,
+              40,
+              1
+            ],
+            "kernel": [
+              3,
+              3
+            ],
+            "macs": 214560,
+            "operator": "CONV_2D",
+            "operator_index": 0,
+            "output_shape": [
+              1,
+              149,
+              20,
+              8
+            ],
+            "padding": 0,
+            "stride": [
+              2,
+              2
+            ],
+            "version": 3,
+            "weight_shape": [
+              8,
+              3,
+              3,
+              1
+            ]
+          },
+          {
+            "formula": "output_elements * input_depth",
+            "input_depth": 760,
+            "input_shape": [
+              1,
+              760
+            ],
+            "macs": 145920,
+            "operator": "FULLY_CONNECTED",
+            "operator_index": 3,
+            "output_elements": 192,
+            "output_shape": [
+              1,
+              192
+            ],
+            "version": 4,
+            "weight_shape": [
+              192,
+              760
+            ]
+          }
+        ],
+        "limit": 50000000,
+        "scope": "CONV_2D/DEPTHWISE_CONV_2D/FULLY_CONNECTED multiply-accumulate counts only; excludes pooling, activation, reshape, FFT/frontend, firmware cycles, and timing",
+        "status": "COMPLETE",
+        "total": 360480,
+        "total_macs": 360480
+      },
+      "memory_plan": {
+        "interpretation": "planned host/firmware buffers only; these values are not summed and presented as an actual TFLM arena; module flash/PSRAM values are planning targets, not whole-allocation guarantees",
+        "module_flash_bytes": 16777216,
+        "module_psram_bytes": 8388608,
+        "planned_buffers": {
+          "float_frontend_bytes": 47680,
+          "float_output_bytes": 768,
+          "int8_input_bytes": 11920,
+          "pcm16_psram_bytes": 96000
+        },
+        "status": "UNVERIFIED_HARDWARE",
+        "target_sram_bytes": 200000
+      },
+      "model": {
+        "bytes": 154000,
+        "exists": true,
+        "path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised/encoder_int8.tflite",
+        "sha256": "dfb7de00a1679df92d5795b8ec23986d32c2105372124e9edbbe09e844584543",
+        "size_bytes": 154000
+      },
+      "operator_codes": [
+        {
+          "builtin_code": 3,
+          "builtin_code_field": 3,
+          "custom_code": null,
+          "deprecated_builtin_code": 3,
+          "index": 0,
+          "name": "CONV_2D",
+          "version": 3
+        },
+        {
+          "builtin_code": 1,
+          "builtin_code_field": 1,
+          "custom_code": null,
+          "deprecated_builtin_code": 1,
+          "index": 1,
+          "name": "AVERAGE_POOL_2D",
+          "version": 2
+        },
+        {
+          "builtin_code": 22,
+          "builtin_code_field": 22,
+          "custom_code": null,
+          "deprecated_builtin_code": 22,
+          "index": 2,
+          "name": "RESHAPE",
+          "version": 1
+        },
+        {
+          "builtin_code": 9,
+          "builtin_code_field": 9,
+          "custom_code": null,
+          "deprecated_builtin_code": 9,
+          "index": 3,
+          "name": "FULLY_CONNECTED",
+          "version": 4
+        }
+      ],
+      "operators": [
+        {
+          "builtin_options_type": 1,
+          "index": 0,
+          "inputs": [
+            0,
+            5,
+            4
+          ],
+          "opcode_index": 0,
+          "operator": "CONV_2D",
+          "outputs": [
+            6
+          ],
+          "version": 3
+        },
+        {
+          "builtin_options_type": 5,
+          "index": 1,
+          "inputs": [
+            6
+          ],
+          "opcode_index": 1,
+          "operator": "AVERAGE_POOL_2D",
+          "outputs": [
+            7
+          ],
+          "version": 2
+        },
+        {
+          "builtin_options_type": 0,
+          "index": 2,
+          "inputs": [
+            7,
+            1
+          ],
+          "opcode_index": 2,
+          "operator": "RESHAPE",
+          "outputs": [
+            8
+          ],
+          "version": 1
+        },
+        {
+          "builtin_options_type": 8,
+          "index": 3,
+          "inputs": [
+            8,
+            3,
+            2
+          ],
+          "opcode_index": 3,
+          "operator": "FULLY_CONNECTED",
+          "outputs": [
+            9
+          ],
+          "version": 4
+        }
+      ],
+      "profile": {
+        "max_macs": 50000000,
+        "max_model_bytes": 300000,
+        "module_flash_bytes": 16777216,
+        "module_psram_bytes": 8388608,
+        "name": "esp32s3-budget",
+        "target_sram_bytes": 200000
+      },
+      "runtime_status": "UNVERIFIED_HARDWARE",
+      "schema": {
+        "model_version": 3,
+        "source": "https://github.com/tensorflow/tensorflow/blob/v2.20.0/tensorflow/compiler/mlir/lite/schema/schema.fbs"
+      },
+      "scope": "EXPERIMENTAL_HOST_ONLY",
+      "static_budget_pass": true,
+      "static_structure_pass": true,
+      "status": "STATIC_BUDGET_PASS_RUNTIME_UNVERIFIED"
+    },
+    "build_provenance": {
+      "errors": [],
+      "expected_hashes": {
+        "build_script_sha256": "aee96132d317ef5d6a8050a5611aeb529e33678778fdca0c3bc17ee696408eca",
+        "runner_binary_sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92",
+        "runner_makefile_sha256": "45c475f0ec35edb62dc90f6fe389ff2ca1317f6c2f779829d688b1493aae8097",
+        "runner_source_sha256": "9d2fcdbc40435a4b1c176b0290b98b7337829167e1100f96d29c255cd10fb2fc",
+        "tflm_library_sha256": "3cb450be4ad7d7c67df7b426a129e9bdb90c3cec0c58f86433a2fc16ea375d15"
+      },
+      "expected_tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+      "manifest": {
+        "build_policy": "FORCED_REBUILD_PINNED_SOURCE",
+        "build_script_sha256": "aee96132d317ef5d6a8050a5611aeb529e33678778fdca0c3bc17ee696408eca",
+        "compile_flags": "-std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Wno-c99-extensions -Wno-unused-parameter",
+        "compiler_version": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+        "format_version": 1,
+        "runner_binary_sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92",
+        "runner_makefile_sha256": "45c475f0ec35edb62dc90f6fe389ff2ca1317f6c2f779829d688b1493aae8097",
+        "runner_source_sha256": "9d2fcdbc40435a4b1c176b0290b98b7337829167e1100f96d29c255cd10fb2fc",
+        "tflm_checkout": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro",
+        "tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+        "tflm_library": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro/gen/osx_arm64_default_gcc/lib/libtensorflow-microlite.a",
+        "tflm_library_sha256": "3cb450be4ad7d7c67df7b426a129e9bdb90c3cec0c58f86433a2fc16ea375d15"
+      },
+      "manifest_exists": true,
+      "manifest_path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/tflm-host/edgeai_tflm_host.build.json",
+      "observed_hashes": {
+        "build_script_sha256": "aee96132d317ef5d6a8050a5611aeb529e33678778fdca0c3bc17ee696408eca",
+        "runner_binary_sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92",
+        "runner_makefile_sha256": "45c475f0ec35edb62dc90f6fe389ff2ca1317f6c2f779829d688b1493aae8097",
+        "runner_source_sha256": "9d2fcdbc40435a4b1c176b0290b98b7337829167e1100f96d29c255cd10fb2fc",
+        "tflm_library_sha256": "3cb450be4ad7d7c67df7b426a129e9bdb90c3cec0c58f86433a2fc16ea375d15"
+      },
+      "observed_tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+      "runner_reported_tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+      "status": "BUILD_BOUND",
+      "tflm_checkout": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro",
+      "tflm_library": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro/gen/osx_arm64_default_gcc/lib/libtensorflow-microlite.a"
+    },
+    "contract_status": "CONTRACT_UNRESOLVED",
+    "errors": [],
+    "expected_tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+    "fixtures": [
+      {
+        "input_bytes": 11920,
+        "input_sha256": "c576ac047d8055b4c10cab1a726b347eb026276f023dab6845a5893e6273447d",
+        "max_abs_lsb": 0,
+        "mean_abs_lsb": 0.0,
+        "name": "zero_quant_point",
+        "rms_lsb": 0.0,
+        "runner_report": {
+          "arena_capacity_bytes": 131072,
+          "arena_used_bytes": 38624,
+          "input": {
+            "dtype": "int8",
+            "scale": 0.126959279,
+            "shape": [
+              1,
+              298,
+              40,
+              1
+            ],
+            "zero_point": -12
+          },
+          "input_bytes": 11920,
+          "message": "TFLM Invoke completed",
+          "model_bytes": 154000,
+          "operations": [
+            "CONV_2D",
+            "AVERAGE_POOL_2D",
+            "RESHAPE",
+            "FULLY_CONNECTED"
+          ],
+          "output": {
+            "dtype": "int8",
+            "scale": 0.115624718,
+            "shape": [
+              1,
+              192
+            ],
+            "zero_point": -8
+          },
+          "output_bytes": 192,
+          "schema_version": 3,
+          "scope": "EXPERIMENTAL_HOST_ONLY",
+          "status": "PASS",
+          "tflm_source_sha": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78"
+        },
+        "runner_returncode": 0,
+        "runner_stderr": "",
+        "runner_stdout": "{\"status\":\"PASS\",\"message\":\"TFLM Invoke completed\",\"arena_capacity_bytes\":131072,\"arena_used_bytes\":38624,\"model_bytes\":154000,\"input_bytes\":11920,\"output_bytes\":192,\"schema_version\":3,\"tflm_source_sha\":\"230c9d9531bd9b08d445b4f2ed0760756ffd5f78\",\"scope\":\"EXPERIMENTAL_HOST_ONLY\",\"input\":{\"dtype\":\"int8\",\"shape\":[1,298,40,1],\"scale\":0.126959279,\"zero_point\":-12},\"output\":{\"dtype\":\"int8\",\"shape\":[1,192],\"scale\":0.115624718,\"zero_point\":-8},\"operations\":[\"CONV_2D\",\"AVERAGE_POOL_2D\",\"RESHAPE\",\"FULLY_CONNECTED\"]}\n",
+        "status": "PASS"
+      },
+      {
+        "input_bytes": 11920,
+        "input_sha256": "5631c3a428695dcdb39b4e314a1995c903af7a4c7b74694131df55918efc0c6f",
+        "max_abs_lsb": 0,
+        "mean_abs_lsb": 0.0,
+        "name": "deterministic_random",
+        "rms_lsb": 0.0,
+        "runner_report": {
+          "arena_capacity_bytes": 131072,
+          "arena_used_bytes": 38624,
+          "input": {
+            "dtype": "int8",
+            "scale": 0.126959279,
+            "shape": [
+              1,
+              298,
+              40,
+              1
+            ],
+            "zero_point": -12
+          },
+          "input_bytes": 11920,
+          "message": "TFLM Invoke completed",
+          "model_bytes": 154000,
+          "operations": [
+            "CONV_2D",
+            "AVERAGE_POOL_2D",
+            "RESHAPE",
+            "FULLY_CONNECTED"
+          ],
+          "output": {
+            "dtype": "int8",
+            "scale": 0.115624718,
+            "shape": [
+              1,
+              192
+            ],
+            "zero_point": -8
+          },
+          "output_bytes": 192,
+          "schema_version": 3,
+          "scope": "EXPERIMENTAL_HOST_ONLY",
+          "status": "PASS",
+          "tflm_source_sha": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78"
+        },
+        "runner_returncode": 0,
+        "runner_stderr": "",
+        "runner_stdout": "{\"status\":\"PASS\",\"message\":\"TFLM Invoke completed\",\"arena_capacity_bytes\":131072,\"arena_used_bytes\":38624,\"model_bytes\":154000,\"input_bytes\":11920,\"output_bytes\":192,\"schema_version\":3,\"tflm_source_sha\":\"230c9d9531bd9b08d445b4f2ed0760756ffd5f78\",\"scope\":\"EXPERIMENTAL_HOST_ONLY\",\"input\":{\"dtype\":\"int8\",\"shape\":[1,298,40,1],\"scale\":0.126959279,\"zero_point\":-12},\"output\":{\"dtype\":\"int8\",\"shape\":[1,192],\"scale\":0.115624718,\"zero_point\":-8},\"operations\":[\"CONV_2D\",\"AVERAGE_POOL_2D\",\"RESHAPE\",\"FULLY_CONNECTED\"]}\n",
+        "status": "PASS"
+      },
+      {
+        "input_bytes": 11920,
+        "input_sha256": "cb968fa1a1319f2c14ea08259c64a66f7262ef4c6f6bcfc758ff2dfbdbec5463",
+        "max_abs_lsb": 0,
+        "mean_abs_lsb": 0.0,
+        "name": "int8_edges",
+        "rms_lsb": 0.0,
+        "runner_report": {
+          "arena_capacity_bytes": 131072,
+          "arena_used_bytes": 38624,
+          "input": {
+            "dtype": "int8",
+            "scale": 0.126959279,
+            "shape": [
+              1,
+              298,
+              40,
+              1
+            ],
+            "zero_point": -12
+          },
+          "input_bytes": 11920,
+          "message": "TFLM Invoke completed",
+          "model_bytes": 154000,
+          "operations": [
+            "CONV_2D",
+            "AVERAGE_POOL_2D",
+            "RESHAPE",
+            "FULLY_CONNECTED"
+          ],
+          "output": {
+            "dtype": "int8",
+            "scale": 0.115624718,
+            "shape": [
+              1,
+              192
+            ],
+            "zero_point": -8
+          },
+          "output_bytes": 192,
+          "schema_version": 3,
+          "scope": "EXPERIMENTAL_HOST_ONLY",
+          "status": "PASS",
+          "tflm_source_sha": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78"
+        },
+        "runner_returncode": 0,
+        "runner_stderr": "",
+        "runner_stdout": "{\"status\":\"PASS\",\"message\":\"TFLM Invoke completed\",\"arena_capacity_bytes\":131072,\"arena_used_bytes\":38624,\"model_bytes\":154000,\"input_bytes\":11920,\"output_bytes\":192,\"schema_version\":3,\"tflm_source_sha\":\"230c9d9531bd9b08d445b4f2ed0760756ffd5f78\",\"scope\":\"EXPERIMENTAL_HOST_ONLY\",\"input\":{\"dtype\":\"int8\",\"shape\":[1,298,40,1],\"scale\":0.126959279,\"zero_point\":-12},\"output\":{\"dtype\":\"int8\",\"shape\":[1,192],\"scale\":0.115624718,\"zero_point\":-8},\"operations\":[\"CONV_2D\",\"AVERAGE_POOL_2D\",\"RESHAPE\",\"FULLY_CONNECTED\"]}\n",
+        "status": "PASS"
+      }
+    ],
+    "host_runtime_status": "PASS",
+    "input_status": "SYNTHETIC_INPUT",
+    "model": {
+      "bytes": 154000,
+      "exists": true,
+      "path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/full100/20261015/baseline_supervised/encoder_int8.tflite",
+      "sha256": "dfb7de00a1679df92d5795b8ec23986d32c2105372124e9edbbe09e844584543",
+      "size_bytes": 154000
+    },
+    "model_sha256": "dfb7de00a1679df92d5795b8ec23986d32c2105372124e9edbbe09e844584543",
+    "model_snapshot": {
+      "bytes": 154000,
+      "sha256": "dfb7de00a1679df92d5795b8ec23986d32c2105372124e9edbbe09e844584543",
+      "status": "BOUND"
+    },
+    "model_training_status": "NOT_ESTABLISHED",
+    "reference": {
+      "input": {
+        "dtype": "int8",
+        "index": 0,
+        "scale": 0.12695927917957306,
+        "shape": [
+          1,
+          298,
+          40,
+          1
+        ],
+        "zero_point": -12
+      },
+      "mode": "BUILTIN_REF_NO_DELEGATES",
+      "output": {
+        "dtype": "int8",
+        "index": 9,
+        "scale": 0.11562471836805344,
+        "shape": [
+          1,
+          192
+        ],
+        "zero_point": -8
+      }
+    },
+    "runner": {
+      "executable": true,
+      "exists": true,
+      "path": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/tflm-host/edgeai_tflm_host",
+      "sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92"
+    },
+    "runtime_status": "UNVERIFIED_HARDWARE",
+    "scope": "EXPERIMENTAL_HOST_ONLY",
+    "status": "TFLM_HOST_PASS"
+  },
+  "train_fixtures": [
+    {
+      "arena_used_bytes": 38624,
+      "input_sha256": "76757a793bf0310454541d002a77b28fc7b6761206b4a3a84f7f4a8957a1878d",
+      "max_lsb": 0,
+      "row_index": 0,
+      "window_id": "103-1240-0000@0000000000"
+    },
+    {
+      "arena_used_bytes": 38624,
+      "input_sha256": "dc13e168a3d0474853a96bc2314ee7d7a21002f1158b6e72ca4f2bd926bb804a",
+      "max_lsb": 1,
+      "row_index": 33859,
+      "window_id": "2691-156745-0028@0000000000"
+    },
+    {
+      "arena_used_bytes": 38624,
+      "input_sha256": "1e2987c404166648dca9debed1234505b9837545c85821934e6e7243935b84dd",
+      "max_lsb": 0,
+      "row_index": 67718,
+      "window_id": "4397-15668-0014@0000144000"
+    },
+    {
+      "arena_used_bytes": 38624,
+      "input_sha256": "931492f2232fc070958bc596344b32c0196f210ff341cf35dd6ca9aa2e413068",
+      "max_lsb": 0,
+      "row_index": 101577,
+      "window_id": "6836-61803-0036@0000000000"
+    },
+    {
+      "arena_used_bytes": 38624,
+      "input_sha256": "38c177e7a147f52dee10dfab4a29c7cd5be7767def26d30aef3e27ff45f7a263",
+      "max_lsb": 1,
+      "row_index": 135437,
+      "window_id": "911-130578-0020@0000096000"
+    }
+  ]
+}

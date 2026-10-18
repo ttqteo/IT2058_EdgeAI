@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "edgeai-host"
+version = "0.1.0"
+description = "Bounded, boardless host prototype for the IT2058 EdgeAI project"
+requires-python = ">=3.11"
+dependencies = [
+    "numpy==2.2.6",
+    "pytest==8.4.2",
+]
+
+[project.optional-dependencies]
+ml = ["tensorflow==2.20.0"]
+
+[project.scripts]
+edgeai = "edgeai.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

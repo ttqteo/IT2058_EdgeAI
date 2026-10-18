@@ -1,0 +1,5 @@
+# Main TensorFlow runtime used by the FULL100 experiment (Python 3.11).
+# Install teacher requirements in a separate environment, never into this one.
+-r requirements.txt
+-r requirements-ml.txt
+soundfile==0.13.1

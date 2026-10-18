@@ -1,0 +1,14 @@
+{
+  "build_policy": "FORCED_REBUILD_PINNED_SOURCE",
+  "build_script_sha256": "aee96132d317ef5d6a8050a5611aeb529e33678778fdca0c3bc17ee696408eca",
+  "compile_flags": "-std=c++17 -O2 -Wall -Wextra -Werror -pedantic -Wno-c99-extensions -Wno-unused-parameter",
+  "compiler_version": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "format_version": 1,
+  "runner_binary_sha256": "34afa6f96896c8cd94ed09ea2d7867b858eee9f27afc82baa9a56228fdf34f92",
+  "runner_makefile_sha256": "45c475f0ec35edb62dc90f6fe389ff2ca1317f6c2f779829d688b1493aae8097",
+  "runner_source_sha256": "9d2fcdbc40435a4b1c176b0290b98b7337829167e1100f96d29c255cd10fb2fc",
+  "tflm_checkout": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro",
+  "tflm_git_commit": "230c9d9531bd9b08d445b4f2ed0760756ffd5f78",
+  "tflm_library": "/Users/anngyn/Documents/Study/Coursework/UIT/Thsi/grade_3/HTTMB/IT2058_EdgeAI/artifacts/vendor/tflite-micro/gen/osx_arm64_default_gcc/lib/libtensorflow-microlite.a",
+  "tflm_library_sha256": "3cb450be4ad7d7c67df7b426a129e9bdb90c3cec0c58f86433a2fc16ea375d15"
+}

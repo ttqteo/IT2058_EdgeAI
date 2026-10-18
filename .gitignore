@@ -1,6 +1,15 @@
 data/*
 !data/README.md
 .venv/
+.venv-teacher/
+*.egg-info/
+.pytest_cache/
+artifacts/
+output/
+tmp/
+*.env
+.env
+firmware/host/build/
 __pycache__/
 *.pyc
 firmware/build/
