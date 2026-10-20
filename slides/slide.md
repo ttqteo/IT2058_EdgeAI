@@ -247,6 +247,209 @@ IT2058 · Báo cáo nghiên cứu và demo hệ thống
 
 ---
 
+<!-- _class: tight -->
+
+## Bối cảnh và ý tưởng
+
+<div class="grid2">
+<div>
+
+<img src="assets/photo-raise-hand.jpg" style="width:100%;height:330px;object-fit:cover;border-radius:12px;display:block">
+
+</div>
+<div>
+
+- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ.
+- **Ý tưởng:** sinh viên nói một câu ngắn, thiết bị nhận ra là ai trong danh sách đã đăng ký
+- **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện
+- **Xử lý tại chỗ:** không gửi giọng nói lên server, không cần mạng
+
+</div>
+</div>
+
+---
+
+<!-- _class: tight -->
+
+## Mục tiêu
+
+<div class="grid2">
+<div>
+
+<img src="assets/photo-microphone.jpg" style="width:100%;height:300px;object-fit:cover;border-radius:12px;display:block">
+
+</div>
+<div>
+
+1. **Nhận diện người nói trên chip:** encoder và so khớp cosine chạy trên ESP32-S3 với đoạn nói 3 giây
+2. **Model đủ nhỏ để nạp vào chip mà vẫn nhận đúng:** so supervised và KD trên cùng student, chọn cách nhận đúng hơn
+3. **Đo tác động của nén INT8:** so EER và top-1 trước và sau khi nén
+
+</div>
+</div>
+
+<div class="warn">
+
+**Khó khăn chính:** model nhận giọng tốt hiện nay (ECAPA-TDNN) nặng khoảng 80MB, trong khi chip chỉ có 512KB SRAM. Encoder INT8 của nhóm còn **154.000 byte**, nhỏ hơn vài trăm lần.
+
+</div>
+
+---
+
+<!-- _class: tight -->
+
+## Model lớn và model nhỏ
+
+<div class="cols" style="align-items:center">
+<div class="col" style="flex:1.6">
+<div class="hflow">
+<div class="node fill" style="flex:1.15"><b>Teacher · ECAPA-TDNN</b><br>SpeechBrain · frozen CPU<br><span style="font-size:15px;color:#dbe7ff">speechbrain/<br>spkrec-ecapa-voxceleb</span></div>
+<div class="ar">→</div>
+<div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của model lớn</div></div>
+</div>
+<div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ khớp embedding</span></div></div>
+<div class="hflow">
+<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Student encoder</b><br><span style="font-size:15px">baseline_conv8</span><br>embedding 192</div>
+<div class="ar">→</div>
+<div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của model nhỏ</div></div>
+</div>
+</div>
+<div class="col">
+<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">KD + AAM-softmax</b><br>student nhận hướng dẫn từ teacher qua embedding</div>
+<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">AAM-softmax supervised</b><br>nhánh supervised độc lập: học theo nhãn speaker, không dùng teacher</div>
+</div>
+</div>
+
+<span class="caption">Embedding: 192 số tóm tắt đặc điểm giọng · AAM head chỉ dùng lúc train; encoder xuất riêng.</span>
+
+- **Đích triển khai:** ESP32-S3; encoder chạy trên board khoảng **53,5 ms/mẫu**
+- **INT8:** baseline_conv8 **154.000 byte** (FP32 587.132 byte)
+
+---
+
+<!-- _class: tight -->
+
+## Xử lý trên thiết bị
+
+<div class="lane">
+<div class="lt">Đăng ký · một lần đầu khoá</div>
+<div class="hflow">
+<div class="node">Nói 3–5 câu<br>mỗi câu ~3 giây</div><div class="ar">→</div>
+<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
+<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
+<div class="node">Lấy trung bình<br>các câu</div><div class="ar">→</div>
+<div class="node">Lưu mẫu giọng<br>vào chip</div>
+</div>
+</div>
+
+<div class="lane">
+<div class="lt">Điểm danh · mỗi lượt</div>
+<div class="hflow">
+<div class="node">Nói<br>2–3 giây</div><div class="ar">→</div>
+<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
+<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
+<div class="node">So với mẫu giọng<br>cả lớp</div><div class="ar">→</div>
+<div class="node ask">Nhận diện<br>chắc chắn?</div><div class="ar">→</div>
+<div class="branch">
+<div class="node"><span class="tag">CÓ</span>Hiện tên, gửi về laptop</div>
+<div class="node"><span class="tag no">KHÔNG</span>Mời nói lại</div>
+</div>
+</div>
+</div>
+
+- **Đủ giống:** điểm giống nhau vượt **ngưỡng**
+- **Tránh nhầm người:** nếu hai bạn có điểm gần nhau, thiết bị mời nói lại. Sau hai lần chưa rõ, giảng viên nhập MSSV để kiểm tra riêng
+
+---
+
+<!-- _class: tight -->
+
+## Ngưỡng là gì, vì sao có thể lệch
+
+<div class="diagram">
+
+![h:270px](diagrams/threshold-shift.svg)
+
+</div>
+
+- **Ngưỡng:** điểm giống nhau từ mức này trở lên thì nhận là đúng người. Chọn sao cho gần như không nhận nhầm người khác (≤ 1%)
+- **Vì sao lệch:** nén model, micro rẻ và phòng học thật đều làm điểm số xê dịch. Giữ ngưỡng cũ thì nhiều bạn bị từ chối nhầm hơn
+- **Nhóm sẽ đo:** lệch bao nhiêu, và chỉnh lại ngưỡng bằng chính giọng đã đăng ký của lớp có khắc phục được không
+
+---
+
+<!-- _class: tight hardware -->
+
+## Phần cứng
+
+<div class="cols">
+<div class="col" style="flex:1.35">
+
+| Linh kiện | Vai trò |
+|---|---|
+| ESP32-S3 | Thiết bị chính (512 KB SRAM) |
+| INMP441 | Micro thu âm |
+| OLED 0,96" | Màn hình hiện tên |
+| Nút, buzzer | Bắt đầu lượt nói, báo kết quả |
+| INA219 | Đo điện năng tiêu thụ |
+
+</div>
+<div class="col" style="flex:0.65">
+
+<img src="assets/photo-breadboard.jpg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;display:block;margin-top:10px">
+
+</div>
+</div>
+
+| So sánh | Jetson Nano (bài mẫu) | Raspberry Pi | ESP32-S3 (đồ án) |
+|---|---|---|---|
+| Loại thiết bị | Máy tính nhúng có GPU | Máy tính nhúng | Vi điều khiển |
+| Chi phí | Cao | Trung bình | **Thấp nhất** |
+| Điện năng | Cao | Trung bình | **Thấp, chạy pin được** |
+
+---
+
+## Kiến trúc phần mềm
+
+<div class="cols">
+<div class="col box">
+
+**Máy tính · huấn luyện**
+
+- Tính phổ âm thanh (bản chuẩn)
+- Chạy model lớn
+- Train hai model nhỏ
+- Nén INT8, chọn ngưỡng
+
+</div>
+<div class="col box">
+
+**ESP32-S3 · chương trình chip**
+
+- Thu âm, bỏ khoảng lặng
+- Tính phổ âm thanh
+- Chạy model nhỏ, so với mẫu
+- Hiện tên, gửi kết quả
+
+</div>
+<div class="col box">
+
+**Laptop · sổ điểm danh**
+
+- Nhận kết quả từ thiết bị
+- Lưu sổ, chặn ghi trùng
+- Đăng ký giọng, nhập MSSV
+- Xuất file CSV
+
+</div>
+</div>
+
+<div class="chips">
+<span class="chip alt">Máy tính: file model nhỏ</span><span class="sep">→</span><span class="chip hot">nạp vào chip ESP32-S3</span><span class="sep">→</span><span class="chip alt">kết quả điểm danh</span><span class="sep">→</span><span class="chip">laptop</span>
+</div>
+
+---
+
 ## Phát biểu bài toán
 
 <p style="font-size:26px;margin:10px 0 26px;">Cho một đoạn giọng nói và các mẫu đăng ký, xác định người nói phù hợp nhất.</p>
@@ -567,6 +770,27 @@ Trong bốn cấu hình, **KD + AAM INT8** có EER **4.1667%** và top1 **45/45*
 </div>
 </div>
 <!-- Proposed follow-up work derived from current limits: no independent test/calibration, no independent An query, no open-set evaluation, encoder-only timing, and limited NVS reset/durability evidence. These are development directions, not completed results. -->
+
+---
+
+## Tài liệu tham khảo
+
+<div class="small">
+
+1. Desplanques et al. *ECAPA-TDNN: Emphasized Channel Attention, Propagation and Aggregation in TDNN Based Speaker Verification.* Interspeech 2020.
+2. Nagrani et al. *VoxCeleb: A Large-Scale Speaker Identification Dataset.* Interspeech 2017.
+3. Panayotov et al. *Librispeech: An ASR Corpus Based on Public Domain Audio Books.* ICASSP 2015.
+4. Hinton et al. *Distilling the Knowledge in a Neural Network.* 2015.
+5. Deng et al. *ArcFace: Additive Angular Margin Loss for Deep Face Recognition.* CVPR 2019.
+6. Jacob et al. *Quantization and Training of Neural Networks for Efficient Integer-Arithmetic-Only Inference.* CVPR 2018.
+7. Ravanelli et al. *SpeechBrain: A General-Purpose Speech Toolkit.* 2021.
+8. David et al. *TensorFlow Lite Micro: Embedded Machine Learning for TinyML Systems.* MLSys 2021.
+9. Nguyen-Tat, Bui, Ngo. *Automating attendance management in human resources.* IJIM Data Insights, 2024.
+10. Nguyen-Tat, Ngo. *Lite-XNet: An efficient deep learning model for COVID-19 lung severity assessment on embedded systems.* CVIU, 2026.
+
+Một số ảnh minh hoạ lấy từ Unsplash.
+
+</div>
 
 ---
 
