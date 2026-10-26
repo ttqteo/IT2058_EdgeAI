@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EdgeAI · Hiệu năng board</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/performance.css">
+</head>
+<body>
+<div class="shell">
+  <header class="topbar"><h1>Hiệu năng ESP32-S3</h1><a href="/" class="local-label">← Demo giọng nói</a></header>
+  <main>
+    <section class="board-panel" aria-label="Snapshot board">
+      <div class="board-identity"><div><h2 id="connection">Chưa đọc board</h2><small id="snapshot-time">Chưa có số đo</small></div></div>
+      <button class="action-button subtle" id="refresh-board">Đọc RAM board</button>
+    </section>
+    <p class="scope-note" id="activity" role="status">Trang này chỉ xem dữ liệu; không tự mở mic hoặc kết nối USB.</p>
+    <div id="error" class="error-box" role="alert" hidden></div>
+    <section class="metrics-grid" aria-label="RAM board">
+      <article class="metric"><h2>Heap nội bộ còn trống</h2><strong id="heap-free">—</strong><small id="heap-total">Chưa đo · không phải tổng SRAM chip</small></article>
+      <article class="metric"><h2>Khối trống lớn nhất</h2><strong id="heap-largest">—</strong><small>Giới hạn một lần cấp phát liên tục</small></article>
+      <article class="metric"><h2>Heap thấp nhất từ boot</h2><strong id="heap-min">—</strong><small>Low-water của các heap · không phải đỉnh riêng query</small></article>
+    </section>
+    <p id="telemetry-note" class="scope-note">Firmware chưa gửi telemetry: không suy ra RAM trống từ arena.</p>
+    <section class="query-section" aria-label="Query thành công gần nhất">
+      <div class="section-heading"><h2>Query thành công gần nhất</h2><span id="query-time" class="local-label">Chưa có</span></div>
+      <p id="query-source" class="scope-note">Chạy mic hoặc file ở trang Demo. Giữ trang này mở để xem kết quả.</p>
+      <section class="metrics-grid" aria-label="Tốc độ query">
+        <article class="metric"><h2>Encoder trên board</h2><strong id="encoder-time">—</strong><small>Chỉ thời gian Invoke</small></article>
+        <article class="metric"><h2>Nhận dạng trên board</h2><strong id="recognition-time">—</strong><small id="recognition-scope">Phạm vi tùy lệnh; không gồm USB</small></article>
+        <article class="metric"><h2>Frontend trên board</h2><strong id="frontend-time">—</strong><small>Log-mel + CMN + INT8; chỉ lệnh PCM</small></article>
+        <article class="metric"><h2>Gửi → nhận qua USB</h2><strong id="usb-time">—</strong><small id="usb-scope">Đo trên Mac · gồm thời gian board xử lý; không gồm thu âm</small></article>
+      </section>
+      <div class="memory-detail">
+        <h2>Bộ nhớ cho lần xử lý này</h2>
+        <dl>
+          <div><dt>Arena model dùng / giữ sẵn</dt><dd id="query-arena">—</dd></div>
+          <div><dt>Tensor vào / ra</dt><dd id="query-tensors">—</dd></div>
+          <div><dt>Heap trước → sau nhận dạng</dt><dd id="query-heap">—</dd></div>
+          <div><dt>Chênh heap (trước − sau)</dt><dd id="query-delta">—</dd></div>
+        </dl>
+        <p class="scope-note">Arena là vùng dùng lại, không cấp mới mỗi query. Tensor nằm trong arena: không cộng hai lần. Chênh heap không tính stack hay cấp phát tạm đã giải phóng; RAM đỉnh riêng query chưa đo.</p>
+      </div>
+      <p id="query-id" class="scope-note mono"></p>
+    </section>
+  </main>
+  <footer class="footer">Số liệu là snapshot có thời điểm đo, không phải giám sát liên tục. Trang không đăng ký mẫu, reset hay nạp firmware.</footer>
+</div>
+<script src="/performance.js" defer></script>
+</body>
+</html>

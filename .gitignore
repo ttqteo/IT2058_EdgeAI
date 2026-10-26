@@ -20,3 +20,11 @@ firmware/sdkconfig
 .DS_Store
 
 /local
+
+# Local ESP32 build inputs, tool output and private demo evidence
+firmware/esp32_s3_smoke/build/
+firmware/esp32_s3_smoke/managed_components/
+firmware/esp32_s3_smoke/generated/
+firmware/esp32_s3_smoke/sdkconfig.old
+firmware/esp32_s3_smoke/sdkconfig.ci
+evidence/

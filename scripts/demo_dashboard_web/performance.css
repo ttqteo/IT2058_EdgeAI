@@ -1,0 +1,18 @@
+.metrics-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 22px 0 0; }
+.metric { min-width: 0; padding: 18px 0; border-top: 1px solid var(--line); }
+.metric h2 { font-size: 12px; color: var(--muted); font-weight: 500; }
+.metric strong { display: block; margin: 8px 0; font-size: 28px; font-weight: 600; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.metric small { display: block; overflow-wrap: anywhere; }
+.query-section { margin-top: 28px; padding: 20px 0; border-top: 1px solid var(--line); }
+.memory-detail { margin-top: 20px; border: 1px solid var(--line); border-radius: 5px; padding: 18px; }
+dl { margin: 14px 0 0; }
+dl > div { display: flex; justify-content: space-between; gap: 20px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+dt { font-size: 13px; color: var(--muted); }
+dd { margin: 0; font-size: 13px; text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .metrics-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .metric { padding: 12px 0; }
+  .metric strong { font-size: 25px; }
+  dl > div { flex-direction: column; gap: 4px; }
+  dd { text-align: left; }
+}
