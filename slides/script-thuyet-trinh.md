@@ -1,316 +1,245 @@
-# Kịch bản thuyết trình EdgeAI theo 14 slide
+# Kịch bản thuyết trình theo 16 slide
 
-Cập nhật ngày 20/10/2026, dùng cùng [deck hiện tại](slide.html). Nguyễn Ấn nói toàn bộ và tự thao tác demo, đại diện nhóm. Không chia lời cho thành viên khác.
+Nguyễn Ấn trình bày toàn bộ và tự thao tác demo, đại diện nhóm. Bản ngày 27/10/2026, khớp thứ tự và tiêu đề của [slide hiện tại](slide.html). Dự kiến 12–15 phút, gồm demo; cần bấm giờ khi tập.
 
-Thời lượng tập nói: khoảng 12 phút 55 giây, gồm khoảng 2 phút thao tác demo. Đây là dự kiến, cần bấm giờ khi tập. Chỉ đọc phần “Lời nói”. Thao tác, ghi chú và Q&A dành cho chuẩn bị.
+Các đoạn in nghiêng trong ngoặc vuông là hướng dẫn thao tác, không đọc. Phần chuẩn bị và trả lời câu hỏi nằm cuối tài liệu.
 
-Mạch trình bày: phát biểu bài toán và input/output, câu hỏi về KD và INT8, thiết kế so sánh, kết quả validation, kiểm chứng triển khai trên ESP32-S3, kết luận và hướng tiếp theo. Lưu mẫu sau reset là kiểm chứng kỹ thuật, không đặt thành câu hỏi nghiên cứu riêng.
+## Slide 1 · Điểm danh bằng giọng nói trên ESP32-S3
 
-## Slide 1 — Điểm danh bằng giọng nói trên ESP32-S3
+Em chào Thầy và các bạn. Em là Nguyễn Ấn, đại diện nhóm 9 trình bày đề tài điểm danh bằng giọng nói trên ESP32-S3.
 
-Thời gian dự kiến: 20 giây.
+Nhóm so sánh hai cách huấn luyện một encoder nhỏ: học từ nhãn người nói và học thêm từ một teacher. Sau đó, nhóm lượng tử hóa encoder sang INT8 và đo khả năng xử lý âm thanh trên board thật.
 
-### Lời nói
+## Slide 2 · Bối cảnh và bài toán
 
-“Em chào Thầy và các bạn. Em là Nguyễn Ấn, đại diện nhóm trình bày đề tài điểm danh bằng giọng nói trên ESP32-S3.
+Nhóm dùng bối cảnh điểm danh để đặt bài toán nhận diện người nói trong danh sách đã đăng ký.
 
-Nhóm khảo sát ảnh hưởng của knowledge distillation và lượng tử hóa INT8 lên một model nhận diện người nói nhỏ, sau đó kiểm tra khả năng triển khai model trên thiết bị thật.”
+Đầu vào là một đoạn PCM ba giây và danh sách mẫu có nhãn. Đầu ra là tên có cosine cao nhất cùng điểm của từng người. Một mẫu đăng ký là vector đặc trưng của giọng nói.
 
-## Slide 2 — Phát biểu bài toán
+Trong phạm vi này, board luôn chọn một người trong danh sách. Nhóm chưa có ngưỡng từ chối người lạ, và điểm cosine không phải xác suất nhận đúng.
 
-Thời gian dự kiến: 45 giây.
+## Slide 3 · Mục tiêu và câu hỏi nghiên cứu
 
-### Lời nói
+Nhóm khảo sát hai vấn đề.
 
-“Bài toán của nhóm là: cho một đoạn giọng nói và các mẫu đã đăng ký, xác định người nói phù hợp nhất.
+Về chất lượng mô hình, KD thay đổi EER và Top-1 thế nào so với supervised, trước và sau INT8? Nhóm giữ cùng student, dữ liệu và quy trình đánh giá để đối chiếu hai cách huấn luyện.
 
-Đầu vào gồm query ba giây, chuẩn hóa về mono 16 kilohertz, cùng các mẫu đặc trưng có nhãn. Đầu ra của hệ thống là tên có cosine cao nhất và điểm tương đồng với từng mẫu.
+Về thiết bị, nhóm muốn giảm thời gian cùng RAM tiền xử lý nhưng giữ nguyên đầu ra. Nhóm kiểm tra với bản tham chiếu, sau đó đo trên ESP32-S3.
 
-Cần phân biệt với đầu ra của model: encoder nhận tensor INT8 kích thước 298 nhân 40 và trả embedding 192 chiều. Board chuẩn hóa embedding rồi so cosine để chọn tên. Mac đảm nhiệm thu âm và frontend.
+## Slide 4 · Teacher và student
 
-Demo hiện chọn trong Quang, Tien và An. Nhóm chưa có ngưỡng từ chối người lạ, và điểm cosine không phải xác suất nhận đúng.”
+Teacher là checkpoint ECAPA-TDNN của SpeechBrain, đã huấn luyện sẵn trên VoxCeleb. Trong thí nghiệm này, nhóm huấn luyện student trên LibriSpeech.
 
-## Slide 3 — Câu hỏi nghiên cứu
+Encoder nhận tensor INT8 kích thước 1 nhân 298 nhân 40 nhân 1 và trả embedding 192 chiều. Student có tên baseline_conv8. Số tám chỉ số kênh, không phải tám lớp convolution. Nhóm dùng một lớp Conv2D tám kênh với kernel 3 nhân 3, stride 2, tiếp theo là ReLU và average pooling. Sau flatten, nhóm đưa 760 giá trị qua lớp Dense để tạo embedding 192 chiều.
 
-Thời gian dự kiến: 40 giây.
+Nhóm giữ nguyên kiến trúc này cho hai cách huấn luyện. Board chạy encoder INT8 của nhánh KD cộng AAM.
 
-### Lời nói
+*[Chỉ sơ đồ từ Conv2D đến Dense; không cần đọc lại toàn bộ kích thước tensor.]*
 
-“Câu hỏi chính của nhóm là: với cùng kiến trúc student và dữ liệu huấn luyện, học thêm từ teacher ảnh hưởng thế nào đến chất lượng xác minh người nói sau khi chuyển sang INT8, so với chỉ học từ nhãn?
+## Slide 5 · Huấn luyện với AAM và KD
 
-Nhóm so sánh supervised AAM và KD cộng AAM. Mỗi nhánh có bản FP32 và INT8 để quan sát riêng tác động của lượng tử hóa.
+Trong nhánh supervised, nhóm dùng AAM-Softmax để huấn luyện student. Nhóm chuẩn hóa embedding và vector trọng số của từng lớp người nói, sau đó tính cosine giữa chúng.
 
-Kết quả nghiên cứu được đọc trên validation. Phần demo ESP32-S3 bổ sung bằng chứng rằng encoder đã xuất có thể chạy và tham gia luồng nhận dạng thật. Việc lưu mẫu trong NVS là một phần của triển khai đó.”
+Với lớp đúng, nhóm thêm biên góc m bằng 0,2 radian trước khi tính logit, dùng hệ số s bằng 30 rồi tính Softmax và Cross-Entropy. Qua lan truyền ngược, nhóm cập nhật backbone cùng head phân lớp để học cách phân biệt người nói. Các vector lớp ở đây là trọng số học trong training; chúng khác mẫu đăng ký trong NVS.
 
-## Slide 4 — Thiết kế thực nghiệm
+Ở nhánh KD, nhóm giữ nguyên loss AAM và cộng thêm loss một trừ cosine giữa embedding student với embedding teacher, với hệ số lambda bằng một. Student vì thế vừa học nhãn, vừa học hướng biểu diễn từ teacher. Nhóm giữ cố định trọng số teacher.
 
-Thời gian dự kiến: 75 giây.
+Khi inference, nhóm bỏ AAM head và teacher, dùng encoder để tạo embedding rồi so cosine với các mẫu đăng ký.
 
-### Lời nói
+*[Chỉ hai thành phần loss trong công thức. Không đọc lần lượt các ký hiệu.]*
 
-“Để phép đối chiếu tập trung vào mục tiêu huấn luyện, nhóm giữ cùng dữ liệu, frontend, kiến trúc baseline_conv8 và embedding 192 chiều.
+## Slide 6 · Dữ liệu và quy trình đánh giá
 
-Ở nhánh supervised, student học phân biệt nhãn người nói bằng AAM. Ở nhánh KD cộng AAM, student vừa học nhãn vừa học cách tạo embedding gần với embedding của teacher.
+Nhóm huấn luyện student trên LibriSpeech train-clean-100, gồm 251 người nói và 28.539 bản ghi gốc. Validation có năm người khác với train; mỗi người ba mẫu đăng ký và chín query. Nhóm tổng hợp ba embedding đăng ký thành một mẫu đại diện.
 
-Công thức trên slide là mất mát AAM. Ý nghĩa chính là thêm một biên góc vào lớp đúng trong quá trình huấn luyện, để yêu cầu phân biệt lớp chặt hơn. Trong cấu hình này, biên m bằng 0,2 radian, hệ số s bằng 30 và có 251 lớp người nói.
+Nhóm dùng hai chỉ số. EER đo lỗi tại điểm tỷ lệ nhận nhầm bằng từ chối nhầm, từ 45 cặp cùng người và 180 cặp khác người. Top-1 là số query chọn đúng người trên tổng 45 query.
 
-Phần KD khuyến khích embedding student cùng hướng với teacher bằng mục tiêu cosine. Teacher chỉ chạy offline, không tham gia lúc demo.
+Người đúng có thể đứng đầu trong khi điểm cùng người và khác người vẫn chồng lấn, nên Top-1 đúng hoàn toàn chưa có nghĩa EER bằng không.
 
-Sau huấn luyện, nhóm bỏ head phân lớp và xuất encoder FP32 cùng encoder INT8. Vì kiến trúc không thay đổi giữa hai nhánh, nhóm có thể đối chiếu ảnh hưởng của cách học và lượng tử hóa mà không trộn thêm ảnh hưởng do đổi model.”
+Nhóm dùng validation để chọn checkpoint và báo cáo kết quả, chưa có test độc lập. Năm người ở đây khác năm nhãn trong demo.
 
-### Ghi chú
+## Slide 7 · Full100: kết quả validation
 
-Không đọc công thức thành từng ký hiệu. Nếu Thầy hỏi sâu, giải thích AAM dùng nhãn, còn KD dùng embedding teacher. Đây là một phép đối chiếu thực nghiệm, chưa phải kết luận tổng quát hoặc đánh giá nhiều seed.
+Với supervised AAM, cả FP32 và INT8 đạt EER khoảng 4,44 phần trăm, đúng 43 trên 45 query.
 
-## Slide 5 — Dữ liệu và cách chia
+Với KD cộng AAM, FP32 đạt EER khoảng 2,78 phần trăm. Sau INT8, EER tăng lên khoảng 4,17 phần trăm, trong khi Top-1 giữ 45 trên 45.
 
-Thời gian dự kiến: 35 giây.
+Nếu so hai bản INT8, KD đúng thêm hai query và có EER thấp hơn khoảng 0,28 điểm phần trăm. Hai bản có cùng kích thước encoder 154.000 byte.
 
-### Lời nói
+Nhóm quan sát được lợi ích của KD trong phép đối chiếu này, đồng thời thấy lượng tử hóa làm EER của nhánh KD tăng dù Top-1 giữ nguyên. Vì vậy, nhóm không dùng riêng kết quả 45 trên 45 để kết luận INT8 giữ nguyên chất lượng.
 
-“Nhóm dùng LibriSpeech train-clean-100 để huấn luyện, gồm 251 người nói và 28.539 bản ghi.
+Validation chỉ có năm người và nhóm đã dùng tập này để chọn checkpoint. Nhóm cần test độc lập cùng nhiều lần huấn luyện để đánh giá mức ổn định của chênh lệch.
 
-Tập đánh giá có 5 người nói khác với tập huấn luyện. Với mỗi người, nhóm dùng 3 mẫu để đăng ký giọng nói và 9 mẫu còn lại để kiểm tra. Như vậy có tổng cộng 45 mẫu kiểm tra.
+## Slide 8 · Phần cứng
 
-Các kết quả ở phần sau đều trên validation. Nhóm chưa đánh giá trên tập test độc lập.”
+Nhóm dùng ESP32-S3 để tiền xử lý, chạy encoder và so khớp. Board có 512 KB SRAM nội bộ, 16 MB flash và 8 MB PSRAM.
 
-## Slide 6 — Teacher và student
+Nhóm lưu firmware và model trong flash, cùng các mẫu đăng ký trong vùng NVS. Bản demo hiện dùng SRAM nội bộ và chưa bật PSRAM.
 
-Thời gian dự kiến: 50 giây.
+Nhóm chưa gắn INMP441. Mac thu PCM ba giây, mono 16 kilohertz, rồi gửi qua cổng native USB. Cách thu này cho phép nhóm kiểm tra luồng xử lý trên board trước khi bổ sung mic phần cứng. Nhóm chưa chứng minh chất lượng thu của mic Mac tương đương INMP441 và chưa đo điện năng.
 
-### Lời nói
+## Slide 9 · Luồng xử lý PCM trên board
 
-“Teacher nhóm dùng là ECAPA-TDNN của SpeechBrain, checkpoint spkrec-ecapa-voxceleb đã huấn luyện sẵn.
+*[Chỉ đường PCM chung trước, rồi hai nhánh đăng ký và nhận diện.]*
 
-Student là baseline_conv8. Tên này là định danh kiến trúc trong code của nhóm, không có nghĩa model gồm tám lớp convolution. Encoder này dùng một lớp convolution tám kênh, pooling và lớp chiếu ra embedding 192 chiều.
+Mac thu và gửi nguyên đoạn PCM qua USB. Trên ESP32-S3, nhóm tính log-mel, chuẩn hóa đặc trưng rồi lượng tử hóa INT8. Encoder chuyển tensor này thành embedding 192 chiều.
 
-Đầu vào là đặc trưng kích thước 298 nhân 40, một kênh. Đầu ra là vector biểu diễn giọng nói để so sánh với template.
+Khi đăng ký, board chuẩn hóa embedding và lưu vector cùng nhãn trong NVS. Hai mẫu công khai LS116 và LS700 dùng luồng PCM này; ba mẫu Quang, Tien và An đã đăng ký bằng luồng tensor trước đó. NVS giữ vector, không giữ file âm thanh.
 
-Tên VoxCeleb thuộc checkpoint teacher. Student trong thí nghiệm này vẫn học trên LibriSpeech. Khi triển khai, board chỉ chạy encoder student INT8 của nhánh KD cộng AAM, không chứa teacher hay AAM head.”
+Khi nhận diện, board chỉ đọc các mẫu NVS, tính cosine và trả tên cùng điểm về dashboard. Ứng dụng trên Mac không tính đặc trưng hay embedding. Nhóm đã huấn luyện và xuất model trước khi chạy demo.
 
-## Slide 7 — Quantization và export
+## Slide 10 · Kích thước model và bộ nhớ
 
-Thời gian dự kiến: 35 giây.
+Encoder FP32 có kích thước 587.132 byte; bản INT8 nạp lên board là 154.000 byte. Đây là kích thước file model. Flash giữ firmware, model và mẫu NVS sau khi mất điện.
 
-### Lời nói
+Khi suy luận, runtime dùng tensor arena trong SRAM. Nhóm cấp 131.072 byte và runtime báo dùng 38.140 byte trong vùng đó. Board còn cần RAM cho PCM, workspace, stack và các thành phần hệ thống, nên arena không đại diện cho tổng RAM sử dụng.
 
-“Nhóm chuyển encoder từ FP32 sang INT8 sau huấn luyện. Cả hai nhánh đều giảm từ 587.132 xuống 154.000 byte, nhỏ hơn khoảng 3,8 lần.
+Bản ghi năm mẫu trong NVS chiếm 3.972 byte, chưa tính overhead lưu trữ. Snapshot STATUS khi chờ ghi nhận 183.192 byte heap trống trên tổng vùng đo 239.908 byte. Số đo này chưa phải RAM đỉnh của query.
 
-Khi demo, Mac gửi đặc trưng log-mel INT8 sang ESP32. Board chạy encoder, đổi embedding đầu ra về số thực rồi chuẩn hóa để lưu mẫu hoặc so cosine.
+## Slide 11 · Tối ưu tiền xử lý trên ESP32-S3
 
-Kết quả full100 ở phần sau được đo trên máy tính với tập validation.”
+Ở bản đầu, board mất khoảng 7,66 giây để tiền xử lý một đoạn PCM ba giây. Riêng encoder chỉ mất khoảng 53,6 mili giây. Nhóm vì thế tập trung tối ưu frontend.
 
-## Slide 8 — Sơ đồ thử nghiệm
+Nhóm tính sẵn cửa sổ Hann, hệ số FFT và thứ tự đảo bit. Với mel filterbank, nhóm chỉ duyệt 494 trọng số khác không thay cho việc duyệt cả ma trận có nhiều phần tử bằng không. Nhóm cũng bỏ buffer phổ công suất trung gian để giảm workspace.
 
-Thời gian dự kiến: 60 giây.
+Nhóm giữ phép tính double và kiểm tra đầu ra với bản tham chiếu. Trên tám đầu vào host đã kiểm tra, đặc trưng và tensor INT8 trùng từng byte. Với hai PCM đo trên board, embedding trùng đường tensor cũ.
 
-### Lời nói
+Sau tối ưu, frontend còn khoảng 2,85 giây, giảm khoảng 62,7 phần trăm. Workspace giảm từ 10.568 xuống 8.512 byte, tiết kiệm 2.056 byte. Hai lượt đo trong bảng không xuất hiện cảnh báo watchdog; nhóm chưa đánh giá chạy liên tục.
 
-“Sơ đồ này thể hiện phần nào chạy trên Mac, phần nào chạy trên ESP32-S3.
+Thời gian gửi PCM đến nhận kết quả qua USB còn khoảng 3,22 giây. Con số này chưa gồm ba giây thu âm.
 
-Khi đăng ký, Mac lấy audio và tính frontend, sau đó lượng tử hóa thành tensor INT8 rồi gửi qua USB. Board chạy encoder, chuẩn hóa embedding và lưu vector cùng nhãn vào NVS. Board lưu mẫu đặc trưng, không lưu file âm thanh gốc.
+## Slide 12 · Kết quả demo trên ESP32-S3
 
-Khi query, Mac thu âm mới hoặc đọc file kiểm tra rồi thực hiện cùng frontend. Board nhận tensor, chạy encoder và so cosine với các template đã nạp từ NVS. Board chọn nhãn có điểm cao nhất, sau đó trả kết quả để Mac hiển thị.
+### Lời nói trước thao tác
 
-Hiện có ba mẫu Quang, Tien và An. Query bình thường không ghi lại hay cập nhật các mẫu này.
+Board đang lưu năm mẫu Quang, Tien, An, LS116 và LS700.
 
-Do chưa có microphone riêng cho board, frontend âm thanh vẫn ở Mac. Phần suy luận encoder và quyết định matching đều nằm trên ESP32-S3.”
+Trong bảng, hai query Quang và Tien dùng tensor cũ, bỏ qua frontend trên board. Bốn query LS116 và LS700 dùng PCM thô, với câu nói khác mẫu đăng ký. Cả bốn query PCM chọn đúng nhãn trong các lượt đã lưu.
+
+Cosine cao nhất của LS116 khoảng 0,85 và 0,81; của LS700 khoảng 0,77 và 0,74. Đây là sáu ví dụ kiểm tra, chưa phải phép đo độ chính xác tổng quát.
+
+Em sẽ kiểm tra board trên giao diện rồi thu một query mới. Mac chỉ thu PCM và truyền dữ liệu; ESP32-S3 xử lý và trả kết quả.
 
 ### Thao tác
 
-Chỉ hàng đăng ký, sau đó hàng query. Nhấn vào ranh giới Mac/board và điểm lưu template, không đọc mọi ô liên tục. Không thực hiện đăng ký lại trong demo.
+*[Mở http://127.0.0.1:8765/. Bấm “Kiểm tra board”, chờ trạng thái sẵn sàng và đủ năm nhãn.]*
 
-## Slide 9 — Cách đánh giá
+Board đã đọc năm mẫu từ NVS. Mỗi mẫu gồm tên và vector đặc trưng; trong lượt demo này em không đăng ký lại.
 
-Thời gian dự kiến: 50 giây.
+*[Nếu cần chạy đối chứng, bấm nút hai tensor cũ. Nói rõ thao tác này bỏ qua frontend. Chờ job kết thúc trước khi mở mic.]*
 
-### Lời nói
+*[Bấm “Thu PCM · 3 giây”. Chờ UI báo đang thu rồi nói một câu khoảng ba giây. Có thể dùng: “Em đang thử nhận diện giọng nói với phần xử lý trên ESP32.” Chờ kết quả mới; không nói trước tên sẽ xuất hiện.]*
 
-“Nhóm dùng EER và top1 để nhìn hai khía cạnh của chất lượng.
+### Lời nói theo kết quả thật
 
-EER là mức lỗi tại điểm tỷ lệ chấp nhận nhầm và từ chối nhầm bằng nhau hoặc được nội suy để cân bằng. EER càng thấp càng tốt. Trong protocol này có 45 cặp cùng người và 180 cặp khác người.
+Board trả về tên và năm điểm cosine cho đoạn vừa thu. Tên ở đầu là mẫu có độ tương đồng cao nhất. Em đối chiếu với người vừa nói để xem lượt này nhận đúng hay nhầm.
 
-Top1 kiểm tra query có chọn đúng người trong năm người đã đăng ký ở validation hay không. Tổng cộng có 45 query.
+*[Chỉ tên thật trên màn hình. Nếu nhận nhầm, nói “Lượt này board chọn …, khác người vừa nói.” Không gọi kết quả là đúng chỉ vì giao diện đã hoàn tất.]*
 
-Mỗi template validation được tạo từ ba embedding đăng ký. Đây là protocol của phần nghiên cứu, khác bộ ba template cá nhân dùng trong demo.
+*[Mở trang “Hiệu năng board”. Chỉ số liệu của query vừa chạy, không đọc số lịch sử thành số mới.]*
 
-Top1 đúng hết vẫn có thể đi cùng EER khác không, vì xếp hạng người có điểm cao nhất và tách các cặp bằng một ngưỡng là hai yêu cầu khác nhau.”
+Ở trang này, em tách thời gian frontend khỏi encoder. Thời gian nhận diện trên board gồm cả tiền xử lý và so khớp. Thời gian USB tính từ gửi request đến nhận phản hồi, còn ba giây thu âm nằm ngoài khoảng đó.
 
-## Slide 10 — Full100: kết quả validation
+RAM còn trống là snapshot của heap nội bộ. Chênh lệch heap trước và sau bằng không chỉ cho biết hai thời điểm đo có cùng lượng trống, chưa cho biết RAM đỉnh mà query sử dụng.
 
-Thời gian dự kiến: 95 giây.
+### Nếu lượt demo lỗi
 
-### Lời nói
+Lượt demo này chưa hoàn tất nên em chưa báo cáo kết quả mới. Bảng trên slide là kết quả của các lượt đã lưu. Em xin tiếp tục phần kết luận.
 
-“Với supervised AAM, cả FP32 và INT8 đạt EER khoảng 4,44 phần trăm, top1 đúng 43 trên 45 query.
+*[Dành khoảng hai phút cho thao tác. Nếu mất kết nối hoặc thu âm lỗi, chuyển về slide; không nạp lại app, đăng ký mẫu hay dùng suy luận trên Mac để thay kết quả board.]*
 
-Với KD cộng AAM, bản FP32 đạt EER khoảng 2,78 phần trăm, thấp nhất trong bảng. Sau chuyển sang INT8, EER tăng lên khoảng 4,17 phần trăm, còn top1 vẫn là 45 trên 45.
+## Slide 13 · Kết luận
 
-Nếu chỉ so hai bản INT8, KD có EER thấp hơn khoảng 0,28 điểm phần trăm và đúng thêm hai query. Hai bản có cùng kích thước 154.000 byte.
+Từ phép đối chiếu hiện tại, nhóm quan sát được lợi ích của KD so với supervised. Đồng thời, INT8 làm EER của nhánh KD tăng dù Top-1 giữ nguyên, nên cần xem cả hai chỉ số.
 
-Điểm nhóm muốn nhấn mạnh là lượng tử hóa không tác động giống nhau lên mọi chỉ số. Nhánh KD vẫn giữ thứ hạng top1 đúng, nhưng EER tăng so với FP32. Vì vậy không thể chỉ nhìn 45 trên 45 rồi kết luận lượng tử hóa hoàn toàn không làm suy giảm chất lượng.
+Trên ESP32-S3, nhóm đã chạy toàn bộ phần xử lý PCM và nhận diện. Phần tốn thời gian chủ yếu nằm ở frontend. Nhóm tối ưu phần này và kiểm tra đầu ra trước khi báo cáo mức giảm thời gian.
 
-Đối với câu hỏi ban đầu, nhóm quan sát được lợi ích của KD ở bản INT8 trong phép đối chiếu này. Tuy nhiên, validation chỉ có năm người nói và chưa có đánh giá nhiều seed hay test độc lập. Chênh lệch hiện tại chưa đủ để khẳng định KD luôn tốt hơn hoặc có ý nghĩa thống kê.
+Phần nhóm thực hiện là thiết kế phép đối chiếu huấn luyện, kiểm chứng INT8 và đo chi phí triển khai trên board thật. Các phương pháp AAM, KD và tối ưu bằng bảng tính sẵn đã có trong nghiên cứu trước.
 
-Sau đây em chuyển sang phần kiểm chứng triển khai model đã xuất trên thiết bị.”
+## Slide 14 · Giới hạn và bước tiếp theo
 
-## Slide 11 — Kết quả demo trên ESP32-S3
+Kết quả còn bốn giới hạn cần kiểm chứng tiếp.
 
-Thời gian dự kiến: 170 giây, gồm khoảng 120 giây thao tác. Chỉ nói kết quả lượt chạy mới sau khi giao diện thật sự hoàn tất.
+Validation nhỏ và đã dùng chọn checkpoint, nên nhóm cần test độc lập cùng nhiều lần huấn luyện. Với người lạ, nhóm cần tập riêng để hiệu chỉnh ngưỡng rồi đo lỗi chấp nhận và từ chối.
 
-### Lời nói trước demo
+Phần thu âm hiện dùng mic Mac và gửi từng đoạn PCM. Bước tiếp theo là gắn mic I2S, đo lại chất lượng thu cùng độ trễ từ lúc bắt đầu nói đến kết quả. Nhóm cũng cần thử nhiễu và chạy liên tục để theo dõi RAM cùng độ ổn định.
 
-“Bảng này là kết quả của hai file query riêng, so với ba mẫu Tien, Quang và An đang lưu trong board.
+## Slide 15 · Tài liệu tham khảo
 
-Với Quang_test, điểm cao nhất khoảng 0,913 thuộc Quang. Với Tien_test, điểm cao nhất khoảng 0,799 thuộc Tien. Mỗi hàng có đủ ba cosine, và board chọn người có điểm lớn nhất.
+Nhóm tham khảo ECAPA-TDNN và SpeechBrain cho teacher, AAM-Softmax cho mục tiêu phân lớp, cùng các công trình về KD, lượng tử hóa và TensorFlow Lite Micro.
 
-Đây là độ tương đồng giữa các vector, không phải xác suất hay phần trăm độ tin cậy. Hai file này cũng chưa đại diện cho độ chính xác tổng quát.
+Nhóm dùng LibriSpeech cho dữ liệu; hai người nói công khai bổ sung trong demo lấy từ dev-other, với thông tin nguồn và giấy phép đi kèm.
 
-Encoder mất khoảng 53,5 mili giây mỗi mẫu trong lần đo trên slide. Tensor arena sử dụng 38.140 byte trong vùng cấp 131.072 byte. Tiếp theo em chạy lại trên dashboard và thử một query từ mic của Mac.”
+## Slide 16 · Cảm ơn Thầy và các bạn đã lắng nghe
 
-### Thao tác demo
+Phần trình bày của em đến đây kết thúc. Nhóm em cảm ơn Thầy và các bạn đã lắng nghe. Em xin nhận góp ý và trả lời câu hỏi của Thầy.
 
-1. Mở http://127.0.0.1:8765/, bấm **Kiểm tra board**. Chỉ trạng thái sẵn sàng và ba mẫu Quang/Tien/An.
-2. Bấm **Thử 2 file có sẵn**, chờ job hoàn tất. Chỉ tên query, nhãn board chọn và ba điểm cosine. Đây là hai query riêng, không phải dùng file đăng ký An để tự so lại chính nó.
-3. Nếu đã thử mic trước buổi báo cáo, bấm **Mở mic · 3 giây**. Chỉ bắt đầu nói khi UI báo đang thu. Dùng câu tự nhiên khoảng ba giây, chẳng hạn “Hôm nay em trình bày kết quả thử nghiệm nhận dạng giọng nói trên thiết bị”.
-4. Chờ kết quả mới. Chỉ nhãn board thực sự trả về, không đọc sẵn tên dự kiến và không gọi lượt live là đúng nếu chưa đối chiếu người nói.
-5. Mở **Hiệu năng board** tại http://127.0.0.1:8765/performance. Chỉ thời gian encoder, nhận dạng trên board và heap còn trống của query gần nhất. Không bấm action khác khi job đang chạy.
-6. Quay về slide 11 rồi chuyển slide 12. Không provision, thêm mẫu, reset hoặc nạp app trong lúc trình bày.
+---
 
-### Lời nói sau demo
+## Chuẩn bị trước khi trình bày
 
-Nếu hai file đều đúng: “Ở lần chạy vừa rồi, board chọn đúng nhãn của cả hai file kiểm tra. Encoder và cosine thực hiện trên ESP32, còn Mac thu hoặc đọc audio, làm frontend và hiển thị phản hồi.”
+- Mở đúng [deck 16 trang](slide.html), dashboard và trang hiệu năng. Kiểm tra cáp data ở cổng native USB; chỉ mở một chương trình sử dụng serial.
+- Bấm kiểm tra board, xác nhận đủ Quang/Tien/An/LS116/LS700. Trạng thái đã lưu có fingerprint `crc32:90fb081d`; nếu khác, kiểm tra trước buổi báo cáo thay vì đăng ký lại giữa demo.
+- Thu thử bằng đúng mic sẽ dùng, kiểm tra quyền mic của tiến trình thu trên Mac. Quyền mic của browser không chứng minh backend đã thu được PCM. Không mở mic trong lúc job khác còn chạy.
+- Tập nói và bấm giờ. Thu ba giây rồi gửi USB là hai bước nối tiếp; với số đo khoảng 3,22 giây cho request/response, cần khoảng sáu giây trở lên từ lúc bắt đầu thu đến kết quả, chưa tính thao tác và các chi phí khác.
+- Khi dùng hai tensor cũ, nói rõ chúng bỏ qua frontend. Muốn minh họa xử lý PCM, dùng lượt mic mới; bốn query PCM công khai trong slide là kết quả đã lưu, không mặc định có nút chạy chúng trên dashboard.
+- Không đọc số liệu lịch sử như kết quả của query vừa chạy. Không đồng nhất 53,5 ms encoder với toàn bộ thời gian nhận diện.
 
-Với mic: “Đây là kết quả board chọn trong ba mẫu đã đăng ký cho query vừa thu. Hệ thống chưa có ngưỡng từ chối người lạ, nên hiện vẫn luôn chọn một trong ba tên.”
+## Câu trả lời ngắn khi Thầy hỏi
 
-Với hiệu năng: “Các số này thuộc query vừa chạy. Thời gian encoder chỉ tính suy luận. Thời gian nhận dạng trên board tính thêm sao chép input, chuẩn hóa và matching. Thời gian USB do Mac đo riêng. Chúng chưa bao gồm toàn bộ thời gian thu âm và frontend.”
+### Nhóm thêm gì so với những phương pháp đã có?
 
-### Ghi chú khi đọc RAM
+Nhóm dùng các phương pháp đã có để so sánh supervised AAM với KD cộng AAM trên cùng student, rồi đo tác động của INT8. Phần triển khai gồm frontend trên ESP32-S3, tối ưu bảng tính và mel thưa, kiểm tra đầu ra với bản tham chiếu, đo thời gian cùng bộ nhớ. Nhóm không nhận là đề xuất thuật toán nhận diện người nói mới.
 
-- Lần kiểm tra đã lưu: heap còn trống 185.412 byte, khoảng 181,1 KiB. Đây là snapshot của heap nội bộ 8-bit, không phải phép đo liên tục hay toàn bộ SRAM còn lại.
-- Thời gian nhận dạng của hai query trong report dashboard khoảng 55,7–55,8 ms. Chỉ đọc số của job hiện trên giao diện khi demo, không coi số lịch sử là kết quả mới.
-- Chênh lệch heap trước/sau bằng 0 byte không có nghĩa query không dùng RAM. Encoder tái sử dụng arena đã cấp, và phép đo này chưa đo peak RAM của query.
-- Ba template đã có trong NVS và được đọc lại sau reset. Chỉ nhắc một câu nếu cần giải thích, không biến thành câu hỏi nghiên cứu hay diễn giải dài về cơ chế lưu flash.
-- Nếu mic nhận nhầm hoặc nhiều lần đều chọn An, nói đúng hiện tượng. Không gọi đó là thành công nhận diện live. Giữ phần kiểm chứng hai file riêng với phần khảo sát mic.
+### KD có thay AAM không?
 
-### Nếu demo lỗi
+Nhóm giữ AAM để student học nhãn, rồi cộng loss cosine với embedding teacher. Nhóm chỉ cập nhật student và head phân lớp của nó, giữ teacher cố định. Sau training, nhóm bỏ cả teacher lẫn head AAM.
 
-“Lượt trực tiếp hiện chưa hoàn tất do lỗi kết nối hoặc xử lý, nên em chưa báo cáo kết quả mới. Bảng trên slide là kết quả của lần đo trước đã lưu báo cáo.”
+### Nhóm tối ưu frontend bằng cách nào?
 
-Không dùng report cũ như kết quả trực tiếp, không chạy model trên Mac rồi gọi là board và không kéo dài phần khắc phục quá thời gian.
+Nhóm tính sẵn Hann, hệ số FFT và đảo bit, chỉ duyệt trọng số mel khác không, đồng thời bỏ buffer không cần giữ. Nhóm giữ double vì thử float32 chưa đạt tiêu chí sai số. Trên tám đầu vào host đã kiểm tra, bản tối ưu trùng từng byte với bản tham chiếu; hai query PCM trên board cũng giữ embedding như đường tensor.
 
-## Slide 12 — Kết luận
+### Board có nhận âm thanh thô không, hay Mac vẫn tính đặc trưng?
 
-Thời gian dự kiến: 45 giây.
+Ở luồng mic hiện tại, ứng dụng Mac thu 48.000 mẫu PCM16 mono 16 kHz rồi gửi nguyên byte qua USB. Board tính log-mel, chuẩn hóa, INT8, encoder và cosine. Driver hoặc hệ điều hành có thể xử lý định dạng ở khâu thu; nhóm chưa đo để khẳng định mic Mac tương đương mic gắn board.
 
-### Lời nói
+### Gắn mic lên board có còn mất khoảng ba giây xử lý không?
 
-“Quay lại câu hỏi nghiên cứu, KD cộng AAM INT8 đạt EER khoảng 4,17 phần trăm và top1 45 trên 45, so với 4,44 phần trăm và 43 trên 45 của supervised INT8 trên validation hiện tại. Đây là lợi ích quan sát được trong phép đối chiếu của nhóm, chưa phải khẳng định cho mọi dữ liệu.
+Nhóm chưa đo trên mic gắn board. Khoảng 2,9 giây hiện là thời gian xử lý một đoạn PCM có sẵn trong bộ nhớ. Với cách chạy batch hiện tại, còn cần thời gian thu. Muốn chồng lấp thu và xử lý, nhóm phải triển khai và kiểm tra luồng I2S cùng cơ chế xử lý theo frame; chưa thể suy ra độ trễ đó từ phép đo hiện tại.
 
-Về triển khai, encoder 154.000 byte đã chạy trên ESP32-S3. Board giữ ba template trong NVS và thực hiện cosine matching. Hai file query riêng cho Quang và Tien cho kết quả đúng trong các lượt đã kiểm tra.
+### Vì sao 45/45 mà EER vẫn khác không?
 
-Phần nhóm thực hiện là phép so sánh và kiểm chứng triển khai. Nhóm chưa đề xuất thuật toán nhận diện người nói mới.”
+Top-1 xét người có điểm cao nhất cho từng query. EER xét khả năng tách cặp cùng người và khác người bằng ngưỡng. Người đúng có thể đứng đầu dù hai phân bố điểm vẫn chồng lấn.
 
-## Slide 13 — Hướng phát triển tiếp theo
+### Năm người trong validation có phải năm người trên board không?
 
-Thời gian dự kiến: 40 giây.
+Không. Validation dùng năm người từ dev-clean tách khỏi train, mỗi người ba mẫu đăng ký và chín query. Board demo lưu Quang/Tien/An cùng LS116/LS700. Nhóm báo cáo hai phần riêng vì dữ liệu và mục đích đánh giá khác nhau.
 
-### Lời nói
+### Heap delta bằng không có nghĩa query không dùng RAM không?
 
-“Bước tiếp theo của nghiên cứu là mở rộng đánh giá bằng query độc lập cho An, thêm người nói và điều kiện thu âm, đồng thời kiểm tra trên tập test riêng.
+Không. Encoder dùng arena đã cấp và frontend cần vùng làm việc. Heap delta là hiệu giữa hai snapshot trước và sau; vùng nhớ cấp rồi giải phóng trong khoảng đó không xuất hiện trong delta. Nhóm chưa dùng số này để kết luận RAM đỉnh.
 
-Với người chưa đăng ký, nhóm cần tập calibration để chọn ngưỡng cosine rồi đánh giá khả năng từ chối trên dữ liệu độc lập. Hiện hệ thống mới chọn top1 trong các mẫu có sẵn.
+### Một người lạ nói thì sao?
 
-Về thiết bị, nhóm cần đo độ trễ toàn luồng từ thu âm đến hiển thị, kiểm tra nhiều lần tắt bật và bổ sung microphone cùng frontend trên board. Các phép đo encoder, matching và heap hiện có mới bao phủ từng phần của hệ thống.”
-
-## Slide 14 — Cảm ơn Thầy và các bạn đã lắng nghe
-
-Thời gian dự kiến: 15 giây.
-
-### Lời nói
-
-“Phần trình bày của nhóm em đến đây là kết thúc. Nhóm em cảm ơn Thầy và các bạn đã lắng nghe. Em xin nhận góp ý và trả lời câu hỏi của Thầy.”
-
-## Chuẩn bị trước giờ demo
-
-- Mở đúng deck 14 trang và dashboard. Giữ sẵn tab hiệu năng, không mở report chứa dữ liệu cá nhân trước lớp nếu không cần.
-- Kết nối board bằng cáp data vào cổng native USB. Kiểm tra trạng thái và ba nhãn Quang/Tien/An, fingerprint `crc32:60a382e2`.
-- Chạy thử hai file. Thử mic một lượt và nghe lại bản thu nếu kết quả bất thường. Chỉ có quyền mic không chứng minh audio đã thu đúng.
-- Không mở chương trình serial thứ hai. Không thay model, thêm mẫu, provision, reset hay chỉnh ngưỡng sát giờ trình bày.
-- Nếu live chưa ổn, giữ hai file cố định làm demo chính và nói rõ live đang khảo sát. Không hứa trước khả năng nhận đúng An từ giọng mới.
-- Thuộc ranh giới xử lý: Mac thu âm/frontend/lượng tử hóa/hiển thị. ESP32 encoder/chuẩn hóa/cosine/top1. NVS giữ vector, không giữ WAV hoặc M4A.
-
-## Q&A để chuẩn bị, không đọc nối vào bài
-
-### Ý tưởng này đã có ai làm chưa? Nhóm thêm gì?
-
-“Nhóm sử dụng speaker embedding, KD và lượng tử hóa đã có. Phần thực hiện là so sánh hai mục tiêu trên cùng student, dữ liệu và protocol, đọc tác động của INT8, rồi kiểm chứng model cùng matching trên ESP32-S3. Nhóm chưa nhận là đầu tiên hay đề xuất thuật toán mới.”
-
-### Vì sao không chọn lưu mẫu sau reset làm câu hỏi nghiên cứu?
-
-“Đó là tiêu chí kiểm chứng bản triển khai có giữ được template để vận hành. Câu hỏi nghiên cứu chính tập trung vào ảnh hưởng của KD và INT8 lên chất lượng model. Nhóm đưa kết quả lưu mẫu vào phần demo kỹ thuật.”
+Board vẫn chọn tên có cosine cao nhất trong năm mẫu. Nhóm cần hiệu chỉnh ngưỡng trên tập riêng rồi đánh giá lỗi chấp nhận và từ chối trước khi triển khai chức năng người lạ.
 
 ### Tại sao không dùng camera?
 
-“Nhóm chọn giọng nói để khảo sát speaker embedding và mô hình nhỏ trên thiết bị hạn chế tài nguyên. Camera nằm ngoài phép so sánh này. Nhóm chưa có thí nghiệm để kết luận giọng nói tốt hơn khuôn mặt.”
+Nhóm chọn giọng nói để khảo sát embedding, KD và INT8 trên ESP32-S3. Nhóm chưa làm thực nghiệm đối chiếu với camera nên chưa có căn cứ kết luận giọng nói tốt hơn nhận diện khuôn mặt.
 
-### Full dataset có nghĩa đã đánh giá toàn bộ người nói không?
+---
 
-“Full chỉ việc dùng toàn bộ train-clean-100 để huấn luyện, gồm 251 người nói. Bảng kết quả vẫn là validation năm người nói tách khỏi train. Chưa có kết quả test độc lập.”
+## Nguồn đối chiếu dành cho người chuẩn bị
 
-### Model nhỏ cụ thể là gì?
+Phần này không đọc khi thuyết trình. Các số liệu là kết quả đã lưu; lần viết script này không chạy lại huấn luyện, board hay microphone.
 
-“baseline_conv8 là encoder convolution tám kênh, pooling và chiếu ra vector 192 chiều. Board dùng bản KD cộng AAM INT8, 154.000 byte. Teacher ECAPA-TDNN chỉ dùng offline lúc train.”
+| Nội dung | Nguồn |
+|---|---|
+| Thứ tự 16 trang và nội dung trình chiếu | [slide.md](slide.md) |
+| EER, Top-1, AAM, KD và kích thước encoder | `artifacts/full100/20261015/baseline_supervised/full_training_report.json`, `artifacts/full100/20261015/baseline_kd/full_training_report.json` |
+| Tối ưu frontend, workspace, parity và số đo trước/sau | [pcm-optimization.md](../docs/pcm-optimization.md) |
+| Năm nhãn, NVS, arena và snapshot heap | `artifacts/voice-demo/20261023/enroll-status-after-reboot-001/report.json` |
+| Bốn query PCM, hai tensor cũ và giới hạn bằng chứng | `evidence/enrollment/20261023/runtime-verification.json`, các report liên kết trong đó |
+| Thu PCM thô và phạm vi DSP của ứng dụng | `scripts/demo_dashboard.py`, [demo-dashboard.md](../docs/demo-dashboard.md) |
 
-### Vì sao top1 đúng hết mà EER khác không?
-
-“Top1 chỉ xét nhãn đứng đầu, còn EER xét tách cặp cùng người và khác người bằng ngưỡng. Xếp hạng vẫn đúng trong khi phân bố điểm còn chồng lấn. 45 trên 45 không đồng nghĩa độ chính xác tổng quát 100 phần trăm.”
-
-### Người chưa đăng ký nói thì sao?
-
-“Hiện board vẫn chọn một trong Quang, Tien và An có cosine cao nhất. Chưa có ngưỡng từ chối, chưa đánh giá open-set hoặc chống phát lại. Vì vậy đây chưa phải hệ thống điểm danh hoàn chỉnh để sử dụng thực tế.”
-
-### Board lưu file mẫu hay vector?
-
-“Board lưu ba vector float32 đã chuẩn hóa, mỗi vector 192 chiều, cùng nhãn và metadata trong record 2.416 byte. Các file âm thanh gốc không nằm trên board. Query không đăng ký lại mẫu.”
-
-### Vì sao dùng ANSI C?
-
-“Bản ESP-NN tối ưu ban đầu chạy được nhưng sai lệch output lớn. Với ANSI C, năm fixture từ train đều đạt sai lệch tối đa một LSB so với tham chiếu. Nhóm giữ cấu hình đúng số học cho demo, chưa xác định chắc operator gây lỗi ở bản tối ưu.”
-
-### 53,5 ms và 0 byte nói lên điều gì?
-
-“53,5 ms là thời gian encoder của các query đã đo, không tính thu âm, frontend hay USB. Heap delta 0 byte chỉ nói lượng heap trống trước và sau không đổi. Model vẫn dùng arena và bộ nhớ firmware, chưa có phép đo peak RAM theo query.”
-
-## Phân bổ thời gian
-
-| Slide | Giây dự kiến |
-|---|---:|
-| 1 | 20 |
-| 2 | 45 |
-| 3 | 40 |
-| 4 | 75 |
-| 5 | 35 |
-| 6 | 50 |
-| 7 | 35 |
-| 8 | 60 |
-| 9 | 50 |
-| 10 | 95 |
-| 11 | 170 |
-| 12 | 45 |
-| 13 | 40 |
-| 14 | 15 |
-| Tổng | 775 (12 phút 55 giây) |
-
-Nếu chỉ có 10 phút, nói slide 2 trong 25 giây, rút khoảng 30 giây ở slide 4, 25 giây ở slide 10 và 120 giây ở slide 11 bằng cách chỉ chạy hai query cố định, bỏ lượt mic cùng phần đọc RAM chi tiết. Giữ input/output, câu hỏi nghiên cứu và giới hạn validation. Nếu có 15 phút, dùng phần dư cho một lượt mic có kiểm tra hoặc Q&A, không đọc thêm toàn bộ log.
-
-## Nguồn để đối chiếu khi tập
-
-- [Deck Markdown](slide.md) và [HTML](slide.html).
-- [Báo cáo supervised](../models/full100-20261015/baseline_supervised/full_training_report.json) và [KD](../models/full100-20261015/baseline_kd/full_training_report.json).
-- [Audit FULL100](../models/full100-20261015/evidence/independent_final_audit.json).
-- Hai query so với ba template trên board, nguồn bảng slide 11: `artifacts/voice-demo/20261020/three-file-readonly-155417-874901/report.json` (bản local, không đưa lên GitHub). Chỉ hai dòng `INDEPENDENT_QUERY` thuộc bảng. Dòng An trong report là self-check file đăng ký, không phải query độc lập.
-- Dashboard hai query và telemetry: `artifacts/demo-dashboard/20261020-084952-b4123338-d166a38a/report.json` (bản local).
-- Tài liệu triển khai local: `docs/demo-mac-usb.md`, `docs/demo-dashboard.md`, `docs/board-telemetry.md`. Các file này không nằm trong gói xuất bản slide.
-
-Khi thay thứ tự hoặc nội dung deck, đối chiếu lại cả 14 tiêu đề trước khi tập. Các số snapshot trong ghi chú là kết quả lịch sử có nguồn, không thay cho số của lượt demo mới.
+Các artifact cá nhân có thể không đi kèm bản clone GitHub. Việc quan sát một lần khởi động và đọc lại NVS chưa chứng minh độ bền qua nhiều chu kỳ tắt bật. Log reset được review ghi `USB_UART_CHIP_RESET`, không tách riêng tác động của nút RST vật lý.

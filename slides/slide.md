@@ -233,7 +233,7 @@ header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 <div class="titlebox">
 
 # Điểm danh bằng giọng nói trên ESP32-S3
-### Đối chiếu supervised và knowledge distillation
+### So sánh supervised và knowledge distillation
 
 </div>
 
@@ -249,7 +249,7 @@ IT2058 · Báo cáo nghiên cứu và demo hệ thống
 
 <!-- _class: tight -->
 
-## Bối cảnh và ý tưởng
+## Bối cảnh và bài toán
 
 <div class="grid2">
 <div>
@@ -259,19 +259,20 @@ IT2058 · Báo cáo nghiên cứu và demo hệ thống
 </div>
 <div>
 
-- **Hiện nay:** gọi tên từng bạn mất thời gian; ký tên trên giấy lại dễ bị điểm danh hộ.
-- **Ý tưởng:** sinh viên nói một câu ngắn, thiết bị nhận ra là ai trong danh sách đã đăng ký
-- **Thiết bị:** vi điều khiển ESP32-S3, rẻ hơn nhiều so với Jetson Nano, rẻ hơn cả Raspberry Pi, tốn ít điện
-- **Xử lý tại chỗ:** không gửi giọng nói lên server, không cần mạng
+- **Bối cảnh:** điểm danh bằng giọng nói trong danh sách đã đăng ký.
+- **Đầu vào:** PCM16 mono 16 kHz, **3 giây** và mẫu đăng ký gồm nhãn + vector.
+- **Đầu ra:** tên có cosine cao nhất cùng điểm của từng người.
+- **Phạm vi:** chưa từ chối người lạ; cosine là độ tương đồng.
 
 </div>
 </div>
+<!-- Giữ nguyên ảnh, kích thước và bố cục hai cột của slide bối cảnh. Gộp input/output từ slide 9 cũ; định nghĩa chỉ số chuyển sang phần đánh giá. -->
 
 ---
 
 <!-- _class: tight -->
 
-## Mục tiêu
+## Mục tiêu và câu hỏi nghiên cứu
 
 <div class="grid2">
 <div>
@@ -281,301 +282,18 @@ IT2058 · Báo cáo nghiên cứu và demo hệ thống
 </div>
 <div>
 
-1. **Nhận diện người nói trên chip:** encoder và so khớp cosine chạy trên ESP32-S3 với đoạn nói 3 giây
-2. **Model đủ nhỏ để nạp vào chip mà vẫn nhận đúng:** so supervised và KD trên cùng student, chọn cách nhận đúng hơn
-3. **Đo tác động của nén INT8:** so EER và top-1 trước và sau khi nén
+1. **Chất lượng mô hình:** KD thay đổi EER và Top-1 thế nào so với supervised, trước và sau INT8?
+2. **Chi phí trên board:** giảm được bao nhiêu thời gian và RAM tiền xử lý khi giữ nguyên đầu ra?
 
 </div>
 </div>
 
 <div class="warn">
 
-**Khó khăn chính:** model nhận giọng tốt hiện nay (ECAPA-TDNN) nặng khoảng 80MB, trong khi chip chỉ có 512KB SRAM. Encoder INT8 của nhóm còn **154.000 byte**, nhỏ hơn vài trăm lần.
+**Cách đối chiếu:** cùng student, dữ liệu và quy trình đánh giá. Đo tiền xử lý trên ESP32-S3 với bản tham chiếu.
 
 </div>
-
----
-
-<!-- _class: tight -->
-
-## Model lớn và model nhỏ
-
-<div class="cols" style="align-items:center">
-<div class="col" style="flex:1.6">
-<div class="hflow">
-<div class="node fill" style="flex:1.15"><b>Teacher · ECAPA-TDNN</b><br>SpeechBrain · frozen CPU<br><span style="font-size:15px;color:#dbe7ff">speechbrain/<br>spkrec-ecapa-voxceleb</span></div>
-<div class="ar">→</div>
-<div class="vg"><div class="cells"><i style="background:#3d557e"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#bfcade"></i><i style="background:#29436f"></i><i style="background:#8394b2"></i><i style="background:#5b7094"></i><i style="background:#c9d3e5"></i><i style="background:#8d9db9"></i><i style="background:#475e85"></i><i style="background:#abb8cf"></i><i style="background:#65799b"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#97a6c0"></i></div><div class="cap">dấu vân giọng của model lớn</div></div>
-</div>
-<div class="hflow" style="margin:8px 0"><div style="flex:1.15"></div><div class="ar" style="visibility:hidden">→</div><div class="pair"><span>↕ khớp embedding</span></div></div>
-<div class="hflow">
-<div class="node" style="flex:1.15;border:2px solid #1F3A68"><b>Student encoder</b><br><span style="font-size:15px">baseline_conv8</span><br>embedding 192</div>
-<div class="ar">→</div>
-<div class="vg"><div class="cells"><i style="background:#475e85"></i><i style="background:#97a6c0"></i><i style="background:#798baa"></i><i style="background:#b5c1d7"></i><i style="background:#334c76"></i><i style="background:#8d9db9"></i><i style="background:#51678d"></i><i style="background:#bfcade"></i><i style="background:#8394b2"></i><i style="background:#51678d"></i><i style="background:#a1afc8"></i><i style="background:#6f82a3"></i><i style="background:#8394b2"></i><i style="background:#abb8cf"></i><i style="background:#3d557e"></i><i style="background:#8d9db9"></i></div><div class="cap">dấu vân giọng của model nhỏ</div></div>
-</div>
-</div>
-<div class="col">
-<div class="box" style="margin:0 0 12px 0;font-size:18px"><b style="color:#1F3A68">KD + AAM-softmax</b><br>student nhận hướng dẫn từ teacher qua embedding</div>
-<div class="box" style="margin:0;font-size:18px"><b style="color:#1F3A68">AAM-softmax supervised</b><br>nhánh supervised độc lập: học theo nhãn speaker, không dùng teacher</div>
-</div>
-</div>
-
-<span class="caption">Embedding: 192 số tóm tắt đặc điểm giọng · AAM head chỉ dùng lúc train; encoder xuất riêng.</span>
-
-- **Đích triển khai:** ESP32-S3; encoder chạy trên board khoảng **53,5 ms/mẫu**
-- **INT8:** baseline_conv8 **154.000 byte** (FP32 587.132 byte)
-
----
-
-<!-- _class: tight -->
-
-## Xử lý trên thiết bị
-
-<div class="lane">
-<div class="lt">Đăng ký · một lần đầu khoá</div>
-<div class="hflow">
-<div class="node">Nói 3–5 câu<br>mỗi câu ~3 giây</div><div class="ar">→</div>
-<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
-<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
-<div class="node">Lấy trung bình<br>các câu</div><div class="ar">→</div>
-<div class="node">Lưu mẫu giọng<br>vào chip</div>
-</div>
-</div>
-
-<div class="lane">
-<div class="lt">Điểm danh · mỗi lượt</div>
-<div class="hflow">
-<div class="node">Nói<br>2–3 giây</div><div class="ar">→</div>
-<div class="node">Bỏ khoảng lặng<br>tính phổ âm thanh</div><div class="ar">→</div>
-<div class="node fill">Model nhỏ<br>ra dấu vân giọng</div><div class="ar">→</div>
-<div class="node">So với mẫu giọng<br>cả lớp</div><div class="ar">→</div>
-<div class="node ask">Nhận diện<br>chắc chắn?</div><div class="ar">→</div>
-<div class="branch">
-<div class="node"><span class="tag">CÓ</span>Hiện tên, gửi về laptop</div>
-<div class="node"><span class="tag no">KHÔNG</span>Mời nói lại</div>
-</div>
-</div>
-</div>
-
-- **Đủ giống:** điểm giống nhau vượt **ngưỡng**
-- **Tránh nhầm người:** nếu hai bạn có điểm gần nhau, thiết bị mời nói lại. Sau hai lần chưa rõ, giảng viên nhập MSSV để kiểm tra riêng
-
----
-
-<!-- _class: tight -->
-
-## Ngưỡng là gì, vì sao có thể lệch
-
-<div class="diagram">
-
-![h:270px](diagrams/threshold-shift.svg)
-
-</div>
-
-- **Ngưỡng:** điểm giống nhau từ mức này trở lên thì nhận là đúng người. Chọn sao cho gần như không nhận nhầm người khác (≤ 1%)
-- **Vì sao lệch:** nén model, micro rẻ và phòng học thật đều làm điểm số xê dịch. Giữ ngưỡng cũ thì nhiều bạn bị từ chối nhầm hơn
-- **Nhóm sẽ đo:** lệch bao nhiêu, và chỉnh lại ngưỡng bằng chính giọng đã đăng ký của lớp có khắc phục được không
-
----
-
-<!-- _class: tight hardware -->
-
-## Phần cứng
-
-<div class="cols">
-<div class="col" style="flex:1.35">
-
-| Linh kiện | Vai trò |
-|---|---|
-| ESP32-S3 | Thiết bị chính (512 KB SRAM) |
-| INMP441 | Micro thu âm |
-| OLED 0,96" | Màn hình hiện tên |
-| Nút, buzzer | Bắt đầu lượt nói, báo kết quả |
-| INA219 | Đo điện năng tiêu thụ |
-
-</div>
-<div class="col" style="flex:0.65">
-
-<img src="assets/photo-breadboard.jpg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;display:block;margin-top:10px">
-
-</div>
-</div>
-
-| So sánh | Jetson Nano (bài mẫu) | Raspberry Pi | ESP32-S3 (đồ án) |
-|---|---|---|---|
-| Loại thiết bị | Máy tính nhúng có GPU | Máy tính nhúng | Vi điều khiển |
-| Chi phí | Cao | Trung bình | **Thấp nhất** |
-| Điện năng | Cao | Trung bình | **Thấp, chạy pin được** |
-
----
-
-## Kiến trúc phần mềm
-
-<div class="cols">
-<div class="col box">
-
-**Máy tính · huấn luyện**
-
-- Tính phổ âm thanh (bản chuẩn)
-- Chạy model lớn
-- Train hai model nhỏ
-- Nén INT8, chọn ngưỡng
-
-</div>
-<div class="col box">
-
-**ESP32-S3 · chương trình chip**
-
-- Thu âm, bỏ khoảng lặng
-- Tính phổ âm thanh
-- Chạy model nhỏ, so với mẫu
-- Hiện tên, gửi kết quả
-
-</div>
-<div class="col box">
-
-**Laptop · sổ điểm danh**
-
-- Nhận kết quả từ thiết bị
-- Lưu sổ, chặn ghi trùng
-- Đăng ký giọng, nhập MSSV
-- Xuất file CSV
-
-</div>
-</div>
-
-<div class="chips">
-<span class="chip alt">Máy tính: file model nhỏ</span><span class="sep">→</span><span class="chip hot">nạp vào chip ESP32-S3</span><span class="sep">→</span><span class="chip alt">kết quả điểm danh</span><span class="sep">→</span><span class="chip">laptop</span>
-</div>
-
----
-
-## Phát biểu bài toán
-
-<p style="font-size:26px;margin:10px 0 26px;">Cho một đoạn giọng nói và các mẫu đăng ký, xác định người nói phù hợp nhất.</p>
-
-<div class="grid2" style="gap:46px;font-size:24px;">
-<div>
-<h3>Đầu vào</h3>
-
-- Audio query **3 giây**, chuẩn hóa về mono **16 kHz**
-- Mẫu đã đăng ký: **nhãn + vector 192 chiều** cho mỗi người
-
-</div>
-<div>
-<h3>Đầu ra</h3>
-
-- **Tên người có cosine cao nhất** trong các mẫu đăng ký
-- **Điểm cosine với từng mẫu**, thể hiện độ tương đồng
-
-</div>
-</div>
-
-<div style="border-top:2px solid #d4deee;padding-top:18px;margin-top:22px;font-size:21px;line-height:1.5;">
-<strong>I/O của encoder:</strong> tensor INT8 [1, 298, 40, 1], đầu ra embedding INT8 [1, 192].<br />
-<strong>Phân chia xử lý:</strong> Mac thu âm và làm frontend. ESP32-S3 chạy encoder và cosine.
-</div>
-
-<p class="small" style="margin-top:18px;">Demo closed-set với Quang, Tien, An. Chưa có ngưỡng từ chối người lạ. Cosine không phải xác suất.</p>
-<!-- Source: scripts/demo_voice_usb.py (INPUT_BYTES, frontend, active labels), firmware/esp32_s3_smoke/main/main.cc (RECOGNIZE) and main/template_store.cc. Audio is normalized to mono 16 kHz before frontend; microphone acquisition may use a different sample rate. NVS stores normalized float32 templates, not raw audio. The encoder emits 192 int8 values; board-side dequantization/normalization precedes cosine and top1. -->
-
----
-
-## Câu hỏi nghiên cứu
-
-<div class="box" style="font-size:23px">
-
-**Câu hỏi:** Với cùng kiến trúc student và dữ liệu huấn luyện, KD ảnh hưởng thế nào đến chất lượng speaker verification sau INT8 so với supervised?
-
-</div>
-
-<div style="margin-top:28px;">
-<h3>Các bản so sánh</h3>
-
-- Cùng baseline_conv8, cùng embedding 192 chiều
-- So sánh supervised AAM với KD + AAM
-- Đo cùng hai trạng thái FP32 và INT8
-</div>
-
-<div class="caption">Full100 đánh giá trên validation. Demo board gồm nhận diện closed-set và đăng ký thêm mẫu.</div>
-
----
-
-<!-- _class: tight -->
-## Thiết kế thực nghiệm
-
-<div class="grid2" style="margin:8px 0;font-size:22px;">
-<div class="box" style="padding:10px 18px;margin:0;">
-<h3>Supervised AAM</h3>
-<p>Student học nhãn người nói bằng AAM.<br />Xuất encoder riêng ở FP32 và INT8.</p>
-</div>
-<div class="box" style="padding:10px 18px;margin:0;">
-<h3>KD + AAM</h3>
-<p>Student học nhãn và khớp embedding teacher.<br />Teacher chạy offline, không lên board.</p>
-</div>
-</div>
-<div style="margin:14px 0 6px;">
-<p style="font-size:22px;margin:0;"><strong>Hàm mất mát AAM</strong> <span class="small">(chỉ dùng khi train)</span></p>
-<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" style="font-size:31px;margin:12px 0;color:#1F3A68;" aria-label="L AAM bằng âm log của exp s cos theta y cộng m, chia cho exp s cos theta y cộng m cộng tổng exp s cos theta j với j khác y">
-<mrow>
-<msub><mi mathvariant="script">L</mi><mtext>AAM</mtext></msub><mo>=</mo><mo>−</mo><mi mathvariant="normal">log</mi><mspace width="0.12em"/>
-<mfrac>
-<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><mo>(</mo><msub><mi>θ</mi><mi>y</mi></msub><mo>+</mo><mi>m</mi><mo>)</mo></mrow></msup>
-<mrow>
-<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><mo>(</mo><msub><mi>θ</mi><mi>y</mi></msub><mo>+</mo><mi>m</mi><mo>)</mo></mrow></msup>
-<mo>+</mo>
-<munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>≠</mo><mi>y</mi></mrow><mi>C</mi></munderover>
-<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><msub><mi>θ</mi><mi>j</mi></msub></mrow></msup>
-</mrow>
-</mfrac>
-</mrow>
-</math>
-<p style="font-size:18px;margin:6px 0;color:#6b7a90;">θ<sub>j</sub>: góc giữa embedding và vector lớp j, y: nhãn đúng, C = 251 lớp người nói.</p>
-<p style="font-size:18px;margin:6px 0;color:#6b7a90;"><strong>m = 0,2 rad</strong>: biên góc, <strong>s = 30</strong>: hệ số nhân logit.</p>
-</div>
-<div class="grid2" style="margin:8px 0 6px;font-size:20px;line-height:1.35;">
-<div>
-<h3 style="margin-bottom:6px;">Biến so sánh</h3>
-<p style="margin:4px 0;">Supervised so với KD<br />FP32 so với INT8</p>
-</div>
-<div>
-<h3 style="margin-bottom:6px;">Giữ cố định</h3>
-<p style="margin:4px 0;">baseline_conv8, embedding 192 chiều<br />Dữ liệu, frontend và validation protocol</p>
-</div>
-</div>
-<div class="caption">Nguồn: full_training_report.json của hai run và src/edgeai/comparative_training.py.</div>
-<!-- AAM reference: ArcFace, https://arxiv.org/abs/1801.07698. Standard per-sample form. The implementation includes numerical clamps and the monotonic fallback. -->
-
-
----
-
-## Dữ liệu và cách chia
-
-<div class="grid2" style="margin-top:30px;">
-<div class="box">
-
-<h3>Huấn luyện</h3>
-
-- LibriSpeech train-clean-100
-- **251 người nói**
-- **28.539 bản ghi**
-
-</div>
-<div class="box">
-
-<h3>Đánh giá (validation)</h3>
-
-- **5 người nói**, **60 mẫu**
-- Mỗi người: **3 đăng ký + 9 kiểm tra**
-- Tổng cộng **45 mẫu kiểm tra**
-
-</div>
-</div>
-
-<p style="font-size:23px; line-height:1.6; margin-top:20px;"><strong>Hai tập không trùng người nói.</strong><br>Kết quả hiện tại chỉ trên validation, chưa có test độc lập.</p>
-
-<!-- Nguồn: artifacts/full100/20261015/data/manifest.json và independent_final_audit.json. Validation: 5 người từ dev-clean, 3 enrollment + 9 query/người. -->
-
+<!-- Giữ nguyên ảnh, kích thước và bố cục slide mục tiêu. Gộp câu hỏi nghiên cứu từ slide 10 cũ; thông số bộ nhớ chỉ trình bày ở phần cứng. -->
 
 ---
 
@@ -586,11 +304,11 @@ IT2058 · Báo cáo nghiên cứu và demo hệ thống
 
 <h3>Teacher</h3>
 
-SpeechBrain · ECAPA-TDNN  
+SpeechBrain · ECAPA-TDNN<br>
 speechbrain/spkrec-ecapa-voxceleb
 
-- Snapshot frozen, chạy offline
-- Chỉ cung cấp teacher embedding cho KD
+- Giữ cố định trọng số teacher
+- Tạo embedding cho nhánh KD khi huấn luyện
 - Không chạy trên ESP32-S3
 
 </div>
@@ -617,78 +335,74 @@ speechbrain/spkrec-ecapa-voxceleb
 </div>
 </div>
 
-<div class="caption">Teacher snapshot là nguồn hướng dẫn offline, không phải dữ liệu student độc lập và không được nạp lên board.</div>
+<div class="caption">Teacher tạo embedding cho dữ liệu train. Chỉ student được xuất và nạp lên ESP32-S3.</div>
 
 ---
 
-## Quantization và export
+<!-- _class: tight -->
+## Huấn luyện với AAM và KD
 
-<div style="width:90%; margin:30px auto 0;">
-
-| Thành phần | Giá trị artifact |
-|---|---|
-| Encoder FP32 | 587.132 byte |
-| Encoder INT8 | **154.000 byte** |
-| Input tensor | INT8, **11.920 byte** |
-| Output tensor | INT8, 192 giá trị |
-
-<div class="caption">Nguồn: full_training_report.json của hai run và board report ngày 19/10/2026. Byte dùng đơn vị decimal.</div>
-
+<div class="grid2" style="margin:8px 0;font-size:22px;">
+<div class="box" style="padding:10px 18px;margin:0;">
+<h3>Supervised AAM</h3>
+<p>AAM dùng nhãn người nói để cập nhật student.</p>
 </div>
-
+<div class="box" style="padding:10px 18px;margin:0;">
+<h3>KD + AAM</h3>
+<p>Giữ loss AAM, thêm loss cosine giữa embedding student và teacher.</p>
+</div>
+</div>
+<div style="margin:14px 0 6px;">
+<p style="font-size:22px;margin:0;"><strong>Hàm mất mát AAM</strong> <span class="small">(chỉ dùng khi train)</span></p>
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block" style="font-size:31px;margin:12px 0;color:#1F3A68;" aria-label="L AAM bằng âm log của exp s cos theta y cộng m, chia cho exp s cos theta y cộng m cộng tổng exp s cos theta j với j khác y">
+<mrow>
+<msub><mi mathvariant="script">L</mi><mtext>AAM</mtext></msub><mo>=</mo><mo>−</mo><mi mathvariant="normal">log</mi><mspace width="0.12em"/>
+<mfrac>
+<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><mo>(</mo><msub><mi>θ</mi><mi>y</mi></msub><mo>+</mo><mi>m</mi><mo>)</mo></mrow></msup>
+<mrow>
+<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><mo>(</mo><msub><mi>θ</mi><mi>y</mi></msub><mo>+</mo><mi>m</mi><mo>)</mo></mrow></msup>
+<mo>+</mo>
+<munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>≠</mo><mi>y</mi></mrow><mi>C</mi></munderover>
+<msup><mi mathvariant="normal">e</mi><mrow><mi>s</mi><mspace width="0.12em"/><mi mathvariant="normal">cos</mi><msub><mi>θ</mi><mi>j</mi></msub></mrow></msup>
+</mrow>
+</mfrac>
+</mrow>
+</math>
+<p style="font-size:18px;margin:6px 0;color:#6b7a90;">θ<sub>j</sub>: góc giữa embedding và vector lớp j, y: nhãn đúng, C = 251 lớp người nói.</p>
+<p style="font-size:18px;margin:6px 0;color:#6b7a90;"><strong>m = 0,2 rad</strong>: biên góc, <strong>s = 30</strong>: hệ số nhân logit.</p>
+</div>
+<p style="font-size:22px;margin:10px 0;"><strong>KD:</strong> L = L<sub>AAM</sub> + λ · [1 − cos(z<sub>student</sub>, z<sub>teacher</sub>)], λ = 1.</p>
+<div class="caption">Khi suy luận, bỏ AAM và teacher; chỉ dùng encoder và cosine với mẫu đăng ký.</div>
+<!-- AAM reference: ArcFace, https://arxiv.org/abs/1801.07698. Standard per-sample form; implementation includes clamps and monotonic fallback. KD is the batch mean of 1-cosine; displayed formula is per sample. Sources: artifacts/full100/20261015/baseline_{supervised,kd}/full_training_report.json (aam_margin=.2, aam_scale=30, kd_weight=0/1), src/edgeai/comparative_training.py. -->
 
 ---
 
-## Sơ đồ thử nghiệm
+<!-- _class: tight -->
 
-<div class="lane">
-<div class="lt">Đăng ký mẫu</div>
-<div class="hflow">
-<div class="node">Mac audio<br>+ frontend</div><div class="ar">→</div>
-<div class="node">quant INT8<br>11.920 B</div><div class="ar">→</div>
-<div class="node fill">USB<br>ESP32-S3</div><div class="ar">→</div>
-<div class="node">baseline_conv8<br>encoder only</div><div class="ar">→</div>
-<div class="node">NVS<br>mẫu đã đăng ký</div>
-</div>
-</div>
+## Dữ liệu và quy trình đánh giá
 
-<div class="lane">
-<div class="lt">Query và hiển thị</div>
-<div class="hflow">
-<div class="node">Mac audio<br>+ frontend</div><div class="ar">→</div>
-<div class="node">quant INT8<br>11.920 B</div><div class="ar">→</div>
-<div class="node fill">ESP32-S3<br>encoder 192</div><div class="ar">→</div>
-<div class="node">cosine + đọc mẫu NVS<br>top1 closed-set · không ghi</div><div class="ar">→</div>
-<div class="node">Mac display</div>
-</div>
-</div>
-
-<div class="caption">Board không có microphone. Đăng ký ghi mẫu vào NVS, query chỉ đọc để so cosine.</div>
-
----
-
-## Cách đánh giá
-
-<div style="margin-top:18px;">
-<p style="font-size:34px;margin:0 0 8px;"><strong>5 người nói</strong></p>
-<p style="font-size:25px;margin:0;">Mỗi người: <strong>3 mẫu đăng ký</strong> + <strong>9 mẫu kiểm tra</strong></p>
-</div>
-<div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:50px;margin-top:42px;padding-top:28px;border-top:2px solid #d4deee;">
+<div class="grid2" style="gap:30px;margin-top:6px;">
 <div>
-<p style="font-size:36px;margin:0 0 14px;"><strong>EER</strong></p>
-<p style="margin:0 0 12px;">Lỗi nhận nhầm và từ chối nhầm</p>
-<p style="font-size:21px;color:#6b7a90;margin:0;">45 cặp cùng người + 180 cặp khác người</p>
-<p style="font-size:26px;margin:22px 0 0;"><strong>Càng thấp càng tốt</strong></p>
+<h3>Huấn luyện</h3>
+<p>LibriSpeech <strong>train-clean-100</strong><br><strong>251 người nói · 28.539 bản ghi</strong></p>
 </div>
 <div>
-<p style="font-size:36px;margin:0 0 14px;"><strong>Top-1</strong></p>
-<p style="margin:0 0 12px;">Tỷ lệ chọn đúng người trong 5 người</p>
-<p style="font-size:21px;color:#6b7a90;margin:0;">Số mẫu đúng / 45 mẫu kiểm tra</p>
-<p style="font-size:26px;margin:22px 0 0;"><strong>Càng cao càng tốt</strong></p>
+<h3>Validation · tách người nói khỏi train</h3>
+<p><strong>5 người · 60 mẫu</strong><br>Mỗi người: 3 đăng ký + 9 query</p>
 </div>
 </div>
-<p class="small" style="margin-top:36px;">Chỉ báo cáo kết quả trên tập validation.</p>
 
+<table style="margin-top:25px;">
+<colgroup><col style="width:18%;"><col style="width:59%;"><col style="width:23%;"></colgroup>
+<thead><tr><th>Chỉ số</th><th>Cách tính trên validation</th><th>Mục tiêu</th></tr></thead>
+<tbody>
+<tr><td><strong>EER</strong></td><td>Mức lỗi khi nhận nhầm bằng từ chối nhầm<br><span style="font-size:18px;">45 cặp cùng người + 180 cặp khác người</span></td><td>Thấp hơn</td></tr>
+<tr><td><strong>Top-1</strong></td><td>Số query chọn đúng người / 45 query</td><td>Cao hơn</td></tr>
+</tbody>
+</table>
+
+<p class="small" style="margin-top:20px;">Validation dùng để chọn checkpoint và báo cáo kết quả; chưa có test độc lập.</p>
+<!-- Merges old slides 12/16 and evaluation side of 6. Enrollment template aggregates 3 embeddings per validation speaker; these 5 speakers differ from the board's demo labels. Sources: artifacts/full100/20261015/data/manifest.json, both full_training_report.json, independent_final_audit.json. -->
 
 ---
 
@@ -698,7 +412,7 @@ speechbrain/spkrec-ecapa-voxceleb
 
 <table>
 <thead>
-<tr><th>Mục tiêu train</th><th>Encoder</th><th>EER</th><th>top1</th></tr>
+<tr><th>Cách huấn luyện</th><th>Encoder</th><th>EER</th><th>Top-1</th></tr>
 </thead>
 <tbody>
 <tr><td>Supervised AAM</td><td>FP32</td><td><strong>4.4444%</strong></td><td>43/45</td></tr>
@@ -710,66 +424,168 @@ speechbrain/spkrec-ecapa-voxceleb
 
 <div class="box">
 
-Trong bốn cấu hình, **KD + AAM INT8** có EER **4.1667%** và top1 **45/45** trên validation slice. Cả hai INT8 encoder đều có kích thước **154.000 byte**.
+KD + AAM có EER thấp hơn ở FP32. Sau INT8, EER tăng từ **2.7778% lên 4.1667%**, trong khi Top-1 vẫn **45/45** trên validation.
 
 </div>
 
-<div class="caption">Bảng dùng cùng 5 speaker, 3 enrollment và 9 query mỗi speaker. Nguồn: frozen reports + independent final audit.</div>
+<div class="caption">So sánh cùng student và protocol. Nguồn: hai báo cáo FULL100 và audit độc lập.</div>
+
+---
+
+<!-- _class: tight hardware -->
+
+## Phần cứng
+
+<div class="cols">
+<div class="col" style="flex:1.35">
+
+| Thiết bị đang dùng | Vai trò |
+|---|---|
+| ESP32-S3 | Tiền xử lý, encoder, cosine và lưu mẫu |
+| Mic của Mac | Thu PCM 3 giây, mono 16 kHz |
+| Native USB | Truyền PCM và kết quả |
+| Dashboard trên Mac | Điều khiển demo, hiển thị số đo |
+
+</div>
+<div class="col" style="flex:0.65">
+
+<img src="assets/photo-breadboard.jpg" style="width:100%;height:200px;object-fit:cover;border-radius:12px;display:block;margin-top:10px">
+<p class="caption">Ảnh minh họa, không phải bộ demo đã lắp.</p>
+
+</div>
+</div>
+
+**ESP32-S3:** 512 KB SRAM nội bộ, 16 MB Flash, 8 MB PSRAM.
+
+<p class="small">Thực nghiệm dùng SRAM nội bộ, chưa bật PSRAM.</p>
+<!-- Hardware sources: artifacts/esp32-smoke/20261018/preflash-record.json; artifacts/esp32-smoke/20261023/enrollment-deploy-001/security-before.log. Active sdkconfig disables CONFIG_SPIRAM. Flash is persistent storage, separate from SRAM and PSRAM. -->
+
+<p class="small">Chưa gắn INMP441. Mic Mac là đầu vào tạm thời; chưa đo điện năng.</p>
+
+---
+
+<!-- _class: tight -->
+
+## Luồng xử lý PCM trên board
+
+<div class="lane" style="margin-top:8px;">
+<div class="lt">Mac thu và gửi PCM thô qua USB</div>
+<div class="hflow">
+<div class="node">PCM 3 giây<br>48.000 mẫu</div><div class="ar">→</div>
+<div class="node">ESP32-S3<br>Log-mel + chuẩn hóa</div><div class="ar">→</div>
+<div class="node">Lượng tử hóa<br>INT8</div><div class="ar">→</div>
+<div class="node fill">Encoder<br>embedding 192</div>
+</div>
+</div>
+
+<div class="grid2" style="gap:30px;margin-top:26px;">
+<div>
+<h3>Đăng ký · thao tác riêng</h3>
+<p>Chuẩn hóa embedding → lưu <strong>nhãn + vector</strong> trong NVS.</p>
+<p class="small">LS116 và LS700 dùng luồng đăng ký PCM này. NVS không lưu file âm thanh.</p>
+</div>
+<div>
+<h3>Nhận diện · mỗi query</h3>
+<p>Cosine với mẫu NVS → chọn tên → gửi <strong>tên và điểm</strong> về Mac.</p>
+<p class="small">Query chỉ đọc mẫu; dashboard hiển thị kết quả và số đo.</p>
+</div>
+</div>
+
+<div class="caption" style="margin-top:20px;">Ứng dụng Mac không tính đặc trưng, embedding hay cosine. Huấn luyện và xuất model thực hiện trước khi demo.</div>
+<!-- Merges old slides 5/8; original Quang/Tien/An enrollment used legacy tensor paths. Sources: main.cc RECOGNIZE_PCM/APPEND_PCM; demo_dashboard.py; evidence/enrollment/20261023/runtime-verification.json. Capture format handling by OS/device is outside application DSP scope. -->
+
+---
+
+## Kích thước model và bộ nhớ
+
+<table style="margin-top:20px;">
+<colgroup><col style="width:42%;"><col style="width:36%;"><col style="width:22%;"></colgroup>
+<thead><tr><th>Thành phần</th><th>Kích thước</th><th>Trong demo</th></tr></thead>
+<tbody>
+<tr><td>Encoder FP32</td><td>587.132 byte</td><td>Không nạp</td></tr>
+<tr><td>Encoder INT8 · đã nạp</td><td><strong>154.000 byte</strong></td><td>Flash</td></tr>
+<tr><td>Tensor arena · dùng / cấp phát</td><td><strong>38.140 / 131.072 byte</strong></td><td>SRAM</td></tr>
+<tr><td>NVS · 5 nhãn và vector</td><td><strong>3.972 byte</strong></td><td>Flash</td></tr>
+</tbody>
+</table>
+
+<p style="font-size:23px;margin-top:26px;">Heap nội bộ khi chờ: <strong>183.192 byte trống / 239.908 byte tổng vùng đo</strong>.</p>
+<p class="small">Khi xử lý còn cần buffer PCM, workspace frontend và stack. Arena không phải tổng RAM sử dụng.</p>
+<div class="caption">Heap là snapshot STATUS, chưa phải RAM đỉnh. Bản ghi NVS chưa tính overhead lưu trữ.</div>
+<!-- Model size: baseline_kd/full_training_report.json. Arena/NVS/heap: artifacts/board-audit/20261027-144805-live/report.json and artifacts/voice-demo/20261023/enroll-status-after-reboot-001/report.json. Workspace comparison appears only on optimization slide. FP32 is a comparison file, not the deployed firmware. -->
+
+---
+
+## Tối ưu tiền xử lý trên ESP32-S3
+
+| Số đo | Trước tối ưu | Sau tối ưu |
+|---|---:|---:|
+| Frontend · Quang / Tien | 7,659 / 7,656 s | **2,854 / 2,851 s** |
+| Nhận diện trên board | 7,715 / 7,712 s | **2,909 / 2,907 s** |
+| Gửi PCM đến nhận kết quả qua USB | 8,101 / 8,099 s | **3,218 / 3,222 s** |
+| Workspace của frontend | 10.568 byte | **8.512 byte** |
+
+- Tính sẵn Hann, hệ số FFT và thứ tự đảo bit; chỉ duyệt **494 trọng số mel khác 0**.
+- Giữ phép tính double. Trên hai query này, đầu ra encoder PCM trùng đường tensor cũ.
+
+<p class="small">Frontend giảm khoảng 62,7%. Bản tối ưu không có cảnh báo watchdog trong hai lượt đo; chưa đánh giá chạy liên tục.</p>
+<div class="caption">Hai PCM cố định; riêng encoder ≈53,6 ms. Thời gian USB chưa gồm 3 giây thu âm.</div>
+<!-- Sources: docs/pcm-optimization.md; artifacts/esp32-smoke/20261020/pcm-deploy-002/pcm-check-002/report.json and 20261022/pcm-optimization-candidate-001/pcm-check-001/002. Host parity: evidence/esp32-smoke/20261022/pcm-optimization-local/parity-report.json, 8 synthetic/real inputs, exact features/int8 vs reference. No general latency or live-mic accuracy claim. -->
 
 ---
 
 ## Kết quả demo trên ESP32-S3
 
-<table style="font-size:24px;margin-top:30px;">
-<colgroup><col style="width:32%;" /><col style="width:17%;" /><col style="width:17%;" /><col style="width:17%;" /><col style="width:17%;" /></colgroup>
+<p style="font-size:22px;">Năm mẫu trong NVS: <strong>Quang, Tien, An, LS116, LS700</strong>.</p>
+<table style="font-size:21px;margin-top:16px;">
+<colgroup><col style="width:30%;" /><col style="width:24%;" /><col style="width:23%;" /><col style="width:23%;" /></colgroup>
 <thead>
-<tr><th rowspan="2">File kiểm tra</th><th colspan="3">Cosine với mẫu đăng ký</th><th rowspan="2">Board chọn</th></tr>
-<tr><th>Tien.m4a</th><th>Quang.m4a</th><th>An.m4a</th></tr>
+<tr><th>Query</th><th>Gửi tới board</th><th>Board chọn</th><th>Cosine cao nhất</th></tr>
 </thead>
 <tbody>
-<tr><td>Quang_test.m4a</td><td style="text-align:center;">0.6627</td><td style="text-align:center;"><strong>0.9130</strong></td><td style="text-align:center;">0.4884</td><td style="text-align:center;"><strong>Quang</strong></td></tr>
-<tr><td>Tien_test.m4a</td><td style="text-align:center;"><strong>0.7994</strong></td><td style="text-align:center;">0.7014</td><td style="text-align:center;">0.4298</td><td style="text-align:center;"><strong>Tien</strong></td></tr>
+<tr><td>Quang_test</td><td>Tensor cũ</td><td><strong>Quang</strong></td><td>0,9130</td></tr>
+<tr><td>Tien_test</td><td>Tensor cũ</td><td><strong>Tien</strong></td><td>0,7994</td></tr>
+<tr><td>LS116 · query 1 / 2</td><td>PCM thô</td><td><strong>LS116 / LS116</strong></td><td>0,8450 / 0,8094</td></tr>
+<tr><td>LS700 · query 1 / 2</td><td>PCM thô</td><td><strong>LS700 / LS700</strong></td><td>0,7734 / 0,7375</td></tr>
 </tbody>
 </table>
-<p class="small" style="margin-top:18px;">Board chọn người có điểm cosine cao nhất.</p>
-<div class="grid2" style="border-top:2px solid #d4deee;padding-top:18px;margin-top:28px;font-size:22px;">
-<p>Encoder: <strong>khoảng 53,5 ms/mẫu</strong></p>
-<p>Tensor arena: <strong>38.140 / 131.072 byte</strong></p>
-</div>
-<div class="caption">Nguồn: đo trực tiếp trên ESP32-S3 (20/10). Điểm cosine đã làm tròn.</div>
-<!-- Board evidence: artifacts/voice-demo/20261020/three-file-readonly-155417-874901/report.json. This table uses only the independent Quang_test.m4a and Tien_test.m4a query rows and all three cosine scores against the active Tien, Quang and An enrollment templates. The An enrollment self-check is excluded. Highest-score values are bold; Board top1 is read from the response. Frozen encoder parity passed; NVS fingerprint stayed crc32:60a382e2 before/after. Runtime is encoder-only; approximately 53.5 ms is the median of the two displayed queries. -->
+<p class="small">Bốn query PCM dùng câu khác mẫu đăng ký, từ LibriSpeech dev-other. Board nhận diện trong danh sách năm người.</p>
+<p class="small">Hai tensor cũ bỏ qua frontend. Sáu query cố định chưa đủ kết luận độ chính xác chung hay chất lượng mic trực tiếp.</p>
+<div class="caption">Nguồn: bản ghi USB sau khởi động lại, 23/10/2026. Điểm đã làm tròn.</div>
+<!-- Sources: artifacts/voice-demo/20261023/public-queries-after-reboot-001/report.json (four held-out PCM queries); artifacts/demo-dashboard/20261023-042246-c75ec747-69b40ba0/report.json (two legacy tensors). Labels/CRC persist across reboot, crc32:90fb081d. Public split/source/license bindings: evidence/public-demo/20261023/prepared-001/manifest.json. Six examples are not a benchmark and no held-out An query is asserted. -->
 
 ---
 
 ## Kết luận
 
-<div style="margin-top:24px;font-size:25px;line-height:1.5;">
-<p style="margin:0 0 30px;"><strong>Chất lượng:</strong> KD + AAM INT8 đạt EER <strong>4.1667%</strong>, Top-1 <strong>45/45</strong> trên validation.</p>
-<p style="margin:0 0 30px;"><strong>Triển khai:</strong> encoder INT8 <strong>154.000 byte</strong> chạy trên ESP32-S3, khoảng <strong>53,5 ms/mẫu</strong>.</p>
-<p style="margin:0 0 30px;"><strong>Demo:</strong> nhận diện đúng hai file Quang/Tien và đăng ký thêm <strong>An</strong> vào NVS.</p>
+<div style="margin-top:22px;">
+<h3>Kết quả nghiên cứu</h3>
+<p style="font-size:26px;line-height:1.5;">KD + AAM cho kết quả tốt hơn supervised trong phép so sánh hiện tại. INT8 làm EER của nhánh KD tăng dù Top-1 giữ nguyên.</p>
 </div>
-<p class="small" style="margin-top:18px;">Kết quả hiện giới hạn ở validation và các mẫu demo đã kiểm tra.</p>
-<!-- Reproducibility sources retained from the former provenance slide: artifacts/full100/20261015/data/manifest.json, baseline_supervised/full_training_report.json, baseline_kd/full_training_report.json, independent_final_audit.json (PASS_WITH_CAVEATS). Board: docs/demo-mac-usb.md; artifacts/voice-demo/20261019/persist-after-reboot-001/report.json; persist-oracle-001/report.json; artifacts/voice-demo/20261020/add-an-001/report.json. The NVS reset evidence applies to the original Quang/Tien record; no three-template reboot result is asserted here. -->
+
+<div style="margin-top:28px;">
+<h3>Kết quả triển khai</h3>
+<p style="font-size:26px;line-height:1.5;">ESP32-S3 thực hiện toàn bộ xử lý PCM và nhận diện. Tối ưu frontend rút ngắn thời gian, giữ đầu ra trên các mẫu đã kiểm tra.</p>
+</div>
+
+<p class="small" style="margin-top:30px;">Phần nhóm thực hiện: đối chiếu cách huấn luyện, kiểm chứng INT8 và đo chi phí triển khai trên board thật.</p>
+<!-- Synthesizes results without repeating tables. Method families AAM, KD, quantization and precomputation/sparse mel are established techniques; no new recognition algorithm is claimed. -->
 
 ---
 
-## Hướng phát triển tiếp theo
+## Giới hạn và bước tiếp theo
 
-<div style="margin-top:22px;">
-<div style="margin-bottom:26px;">
-<h3 style="font-size:25px;">Kiểm thử độc lập</h3>
-<p style="font-size:24px;">Thu query riêng cho An, thêm người nói và điều kiện thu âm.</p>
-</div>
-<div style="margin-bottom:26px;">
-<h3 style="font-size:25px;">Nhận diện người lạ</h3>
-<p style="font-size:24px;">Hiệu chỉnh ngưỡng cosine trên tập calibration riêng.</p>
-</div>
-<div>
-<h3 style="font-size:25px;">Kiểm tra độ ổn định</h3>
-<p style="font-size:24px;">Đo độ trễ toàn luồng và thử NVS qua nhiều lần tắt/bật.</p>
-</div>
-</div>
-<!-- Proposed follow-up work derived from current limits: no independent test/calibration, no independent An query, no open-set evaluation, encoder-only timing, and limited NVS reset/durability evidence. These are development directions, not completed results. -->
+<table style="margin-top:24px;font-size:23px;">
+<colgroup><col style="width:47%;"><col style="width:53%;"></colgroup>
+<thead><tr><th>Giới hạn hiện tại</th><th>Bước kiểm chứng tiếp theo</th></tr></thead>
+<tbody>
+<tr><td>Validation nhỏ, đã dùng chọn checkpoint</td><td>Test độc lập, thêm người nói và lặp lại huấn luyện</td></tr>
+<tr><td>Chưa từ chối người ngoài danh sách</td><td>Hiệu chỉnh ngưỡng trên tập riêng, đo lỗi chấp nhận / từ chối</td></tr>
+<tr><td>Mic Mac, xử lý từng đoạn PCM</td><td>Gắn mic I2S, đo chất lượng thu và độ trễ toàn luồng</td></tr>
+<tr><td>Các lượt đo ngắn, query cố định</td><td>Thử nhiễu, theo dõi RAM và độ ổn định khi chạy liên tục</td></tr>
+</tbody>
+</table>
+<!-- Consolidates scope limitations and future work from old slides 6/19/20. Planned checks are not completed claims; INMP441 is a candidate I2S microphone, not attached hardware. -->
 
 ---
 
@@ -788,7 +604,7 @@ Trong bốn cấu hình, **KD + AAM INT8** có EER **4.1667%** và top1 **45/45*
 9. Nguyen-Tat, Bui, Ngo. *Automating attendance management in human resources.* IJIM Data Insights, 2024.
 10. Nguyen-Tat, Ngo. *Lite-XNet: An efficient deep learning model for COVID-19 lung severity assessment on embedded systems.* CVIU, 2026.
 
-Một số ảnh minh hoạ lấy từ Unsplash.
+Ảnh minh họa: Unsplash. Dữ liệu demo LS116/LS700: LibriSpeech dev-other, CC BY 4.0.
 
 </div>
 
