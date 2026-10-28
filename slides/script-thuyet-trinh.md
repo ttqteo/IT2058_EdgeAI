@@ -58,7 +58,7 @@ Người đúng có thể đứng đầu trong khi điểm cùng người và kh
 
 Nhóm dùng validation để chọn checkpoint và báo cáo kết quả, chưa có test độc lập. Năm người ở đây khác năm nhãn trong demo.
 
-## Slide 7 · Full100: kết quả validation
+## Slide 7 · FULL100: kết quả validation
 
 Với supervised AAM, cả FP32 và INT8 đạt EER khoảng 4,44 phần trăm, đúng 43 trên 45 query.
 

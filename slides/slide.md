@@ -223,7 +223,7 @@ style: |
   .pair { flex:1; text-align:center; }
   .pair span { display:inline-block; border:2px dashed var(--accent); border-radius:999px; padding:2px 14px;
     font-size:14px; font-weight:700; color:var(--navy); background:#fff; }
-footer: '<span>Nhóm 9</span><span>Speaker verification trên ESP32-S3</span><span>10/2026</span><span></span>'
+footer: '<span>Nhóm 9</span><span>Nhận diện người nói trên ESP32-S3</span><span>10/2026</span><span></span>'
 header: '<img src="assets/UIT_logo.svg" alt="UIT">'
 ---
 
@@ -408,23 +408,23 @@ speechbrain/spkrec-ecapa-voxceleb
 
 <!-- _class: tight -->
 
-## Full100: kết quả validation
+## FULL100: kết quả validation
 
 <table>
 <thead>
 <tr><th>Cách huấn luyện</th><th>Encoder</th><th>EER</th><th>Top-1</th></tr>
 </thead>
 <tbody>
-<tr><td>Supervised AAM</td><td>FP32</td><td><strong>4.4444%</strong></td><td>43/45</td></tr>
-<tr><td>Supervised AAM</td><td>INT8</td><td><strong>4.4444%</strong></td><td>43/45</td></tr>
-<tr><td>KD + AAM</td><td>FP32</td><td><strong>2.7778%</strong></td><td>45/45</td></tr>
-<tr><td>KD + AAM</td><td>INT8</td><td><strong>4.1667%</strong></td><td>45/45</td></tr>
+<tr><td>Supervised AAM</td><td>FP32</td><td><strong>4,44%</strong></td><td>43/45</td></tr>
+<tr><td>Supervised AAM</td><td>INT8</td><td><strong>4,44%</strong></td><td>43/45</td></tr>
+<tr><td>KD + AAM</td><td>FP32</td><td><strong>2,78%</strong></td><td>45/45</td></tr>
+<tr><td>KD + AAM</td><td>INT8</td><td><strong>4,17%</strong></td><td>45/45</td></tr>
 </tbody>
 </table>
 
 <div class="box">
 
-KD + AAM có EER thấp hơn ở FP32. Sau INT8, EER tăng từ **2.7778% lên 4.1667%**, trong khi Top-1 vẫn **45/45** trên validation.
+KD + AAM có EER thấp hơn ở FP32. Sau INT8, EER tăng từ **2,78% lên 4,17%**, trong khi Top-1 vẫn **45/45** trên validation.
 
 </div>
 
@@ -518,9 +518,9 @@ KD + AAM có EER thấp hơn ở FP32. Sau INT8, EER tăng từ **2.7778% lên 4
 
 ## Tối ưu tiền xử lý trên ESP32-S3
 
-| Số đo | Trước tối ưu | Sau tối ưu |
+| Số đo · PCM Quang_test / Tien_test | Trước tối ưu | Sau tối ưu |
 |---|---:|---:|
-| Frontend · Quang / Tien | 7,659 / 7,656 s | **2,854 / 2,851 s** |
+| Frontend | 7,659 / 7,656 s | **2,854 / 2,851 s** |
 | Nhận diện trên board | 7,715 / 7,712 s | **2,909 / 2,907 s** |
 | Gửi PCM đến nhận kết quả qua USB | 8,101 / 8,099 s | **3,218 / 3,222 s** |
 | Workspace của frontend | 10.568 byte | **8.512 byte** |
@@ -529,7 +529,7 @@ KD + AAM có EER thấp hơn ở FP32. Sau INT8, EER tăng từ **2.7778% lên 4
 - Giữ phép tính double. Trên hai query này, đầu ra encoder PCM trùng đường tensor cũ.
 
 <p class="small">Frontend giảm khoảng 62,7%. Bản tối ưu không có cảnh báo watchdog trong hai lượt đo; chưa đánh giá chạy liên tục.</p>
-<div class="caption">Hai PCM cố định; riêng encoder ≈53,6 ms. Thời gian USB chưa gồm 3 giây thu âm.</div>
+<div class="caption">Hai PCM cố định, đo ngày 20 và 22/10/2026; riêng encoder ≈53,6 ms. Thời gian USB chưa gồm 3 giây thu âm.</div>
 <!-- Sources: docs/pcm-optimization.md; artifacts/esp32-smoke/20261020/pcm-deploy-002/pcm-check-002/report.json and 20261022/pcm-optimization-candidate-001/pcm-check-001/002. Host parity: evidence/esp32-smoke/20261022/pcm-optimization-local/parity-report.json, 8 synthetic/real inputs, exact features/int8 vs reference. No general latency or live-mic accuracy claim. -->
 
 ---
